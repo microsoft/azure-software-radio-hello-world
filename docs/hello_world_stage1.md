@@ -1,14 +1,60 @@
 
 ## Stage 1 (GNU Radio Setup and Viewing a Signal)
 
-<starting from a fresh Ubuntu 20.04 Server VM (not our dev VM) with RDP already set up>
+Create an Ubuntu 20.04 LTS Server VM, SSH in, and set up remote desktop either [using these steps](http://go.microsoft.com/fwlink/?LinkId=2116615) or the commands below:
 
-First we will install GNU Radio using the public PPA:
 ```console
-sudo add-apt-repository ppa:gnuradio/gnuradio-releases
 sudo apt-get update
-sudo apt install -y gnuradio
+sudo apt-get -y install xfce4
+sudo apt install xfce4-session
+sudo apt-get -y install xrdp
+sudo systemctl enable xrdp
+echo xfce4-session >~/.xsession
+sudo service xrdp restart
 ```
+
+### Installing GNU Radio from Source
+Once you have a remote desktop connection into the VM, we can install GNU Radio.  In this section we will be installing GNU Radio from source, as it gaurantees the best compatbility with 3rd party GNU Radio modules that we will want to use, and lets us use one of the latest versions.
+
+We will first install the prerequisites:
+
+```console
+sudo apt install git cmake g++ libboost-all-dev libgmp-dev swig python3-numpy python3-mako python3-sphinx python3-lxml doxygen libfftw3-dev libsdl1.2-dev libgsl-dev libqwt-qt5-dev libqt5opengl5-dev python3-pyqt5 liblog4cpp5-dev libzmq3-dev python3-yaml python3-click python3-click-plugins python3-zmq python3-scipy python3-gi python3-gi-cairo gir1.2-gtk-3.0 libcodec2-dev libgsm1-dev pybind11-dev python3-matplotlib libsndfile1-dev python3-pip libsoapysdr-dev soapysdr-tools
+sudo pip install pygccxml pyqtgraph
+```
+
+Next we must install Volk from source:
+
+```console
+cd ~
+git clone --recursive https://github.com/gnuradio/volk.git
+cd volk
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release -DPYTHON_EXECUTABLE=/usr/bin/python3 ../
+make -j4
+sudo make install
+sudo ldconfig
+```
+Now we can install GNU Radio, specifically version 3.9.  Note the first command below is a bandaid fix for a bug related to cmake finding boost and looking in the wrong spot.  
+
+```console
+sudo ln -s /usr/include /include
+cd ~
+git clone https://github.com/gnuradio/gnuradio.git
+cd gnuradio
+git checkout maint-3.9
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release -DPYTHON_EXECUTABLE=/usr/bin/python3 ../
+make -j4
+sudo make install
+sudo ldconfig
+```
+
+If no errors occured, you should now have GNU Radio installed!
+
+### Running GNU Radio
 
 Next, open up GNU Radio Companion (GRC) in a new terminal:
 ```console
@@ -53,6 +99,8 @@ Now run the flowgraph and you'll see just a single sine wave.  Close the plot, a
 <img src="images/real_sin.png" width="500"/>
 
 If you would like a more detailed tutorial about creating and operating flowgraphs, please see [this GNU Radio tutorial](https://wiki.gnuradio.org/index.php/Guided_Tutorial_GRC).
+
+### Using GNU Radio with Azure
 
 Next let's install the gr-azure-software-radio out-of-tree module (OOT) so we can work with Azure.  Close GNU Radio altogether, and in your terminal do the following commands:
 
