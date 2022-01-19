@@ -19,7 +19,7 @@ Once you have a remote desktop connection into the VM, we can install GNU Radio.
 We will first install the prerequisites:
 
 ```console
-sudo apt install git cmake g++ libboost-all-dev libgmp-dev swig python3-numpy python3-mako python3-sphinx python3-lxml doxygen libfftw3-dev libsdl1.2-dev libgsl-dev libqwt-qt5-dev libqt5opengl5-dev python3-pyqt5 liblog4cpp5-dev libzmq3-dev python3-yaml python3-click python3-click-plugins python3-zmq python3-scipy python3-gi python3-gi-cairo gir1.2-gtk-3.0 libcodec2-dev libgsm1-dev pybind11-dev python3-matplotlib libsndfile1-dev python3-pip libsoapysdr-dev soapysdr-tools
+sudo apt install -y git cmake g++ libboost-all-dev libgmp-dev swig python3-numpy python3-mako python3-sphinx python3-lxml doxygen libfftw3-dev libsdl1.2-dev libgsl-dev libqwt-qt5-dev libqt5opengl5-dev python3-pyqt5 liblog4cpp5-dev libzmq3-dev python3-yaml python3-click python3-click-plugins python3-zmq python3-scipy python3-gi python3-gi-cairo gir1.2-gtk-3.0 libcodec2-dev libgsm1-dev pybind11-dev python3-matplotlib libsndfile1-dev python3-pip libsoapysdr-dev soapysdr-tools
 sudo pip install pygccxml pyqtgraph
 ```
 
@@ -135,11 +135,11 @@ Create an azure-software-radio VM using the instructions [here](https://github.c
 Once you open the VM and remote desktop into it, before starting GR, go into an azure portal or use the CLI to add a storage account and container.  
 
 NOTE TO REMOVE 
-marcazsrsdktestsa
-marclichtman-test-1-rg
-testcontainer
+https://marcpubliciqblobssa.blob.core.windows.net
+public-iq-blobs
 
-Make note of the storage account's URL, which is based on your storage account name, using the format:  http://yoursa.blob.core.windows.net replacing yoursa with your storage account name.
+
+Make note of the storage account's URL, which is based on your storage account name, using the format:  https://yoursa.blob.core.windows.net replacing yoursa with your storage account name.
 
 Open a terminal in the VM and do
 ```console
