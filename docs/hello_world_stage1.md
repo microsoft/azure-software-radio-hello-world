@@ -100,7 +100,7 @@ Now run the flowgraph and you'll see just a single sine wave.  Close the plot, a
 
 If you would like a more detailed tutorial about creating and operating flowgraphs, please see [this GNU Radio tutorial](https://wiki.gnuradio.org/index.php/Guided_Tutorial_GRC).
 
-### Using GNU Radio with Azure
+### Installing Azure SDR Blocks from Source
 
 Next let's install the gr-azure-software-radio out-of-tree module (OOT) so we can work with Azure.  Close GNU Radio altogether, and in your terminal do the following commands:
 
@@ -128,18 +128,15 @@ sudo make install
 sudo ldconfig
 ```
 
-THIS IS WHEN I RAN INTO THE ERROR "The path was deleted, renamed, or moved to another location." AND SWITCHED TO USING OUR DEV VM
+At this point you have GNU Radio and the Azure SDR blocks installed, you can skip to the section [Using GNU Radio with Azure](#Using GNU Radio with Azure).  The next portion of this tutorial will show you how to spin up our custom GNU Radio development VM which is currently on the Azure Marketplace in Private Preview.
+
+### Creating GNU Radio Development VM in Azure
 
 Create an azure-software-radio VM using the instructions [here](https://github.com/microsoft/azure-software-radio/blob/documentation/cli-updates/pages/devvm.md]).
 
-Once you open the VM and remote desktop into it, before starting GR, go into an azure portal or use the CLI to add a storage account and container.  
+### Using GNU Radio with Azure
 
-NOTE TO REMOVE 
-https://marcpubliciqblobssa.blob.core.windows.net
-public-iq-blobs
-
-
-Make note of the storage account's URL, which is based on your storage account name, using the format:  https://yoursa.blob.core.windows.net replacing yoursa with your storage account name.
+Open up a remote desktop connection to your VM. Before starting GRC, go into an Azure portal or use the CLI to add a storage account and container.  
 
 Open a terminal in the VM and do
 ```console
@@ -152,17 +149,11 @@ In the same terminal, open GR with:
 ```console
 gnuradio-companion
 ```
-
-<where do i store this .grc example and blob where others can access it?>
-
-<Clone/open grc file FILL THIS OUT WHEN WE KNOW WHERE ITS STORED>
+<Clone/open grc file FILL THIS OUT ONCE IT'S STORED IN GIT>
 
 This example flowgraph consists of four blocks.  The samples are originating from the Blob Source, which is feeding a signal recording stored in blob storage. 
 
-
 <img src="images/blob_flowgraph.png" width="500"/>
-
-<I was only able to get blob to work with connection string, not the default method of using az login, it just stalled out on me>
 
 Hit the play button to run this new flowgraph, and you should see the following GUI pop up, visualizing the wideband FM radio signal stored in blob storage:
 
@@ -176,11 +167,12 @@ And then hover over the center of the signal with your cursor to see the frequen
 
 <img src="images/zoomed_in.png" width="500"/>
 
+If you would like to be able to upload your own signal recordings and store them in the cloud, you will need to create an Azure Storage Account, with at least one blob container.  The following lines can be entered into Azure CLI, either using Azure Portal in the browser or a local Azure CLI.
 
+MENTION HOW THE PARTIAL AND FULL URL IS FORMED
+https://marcpubliciqblobssa.blob.core.windows.net
+public-iq-blobs
+connection string:
+DefaultEndpointsProtocol=https;AccountName=marcpubliciqblobssa;AccountKey=+MGGfNpP6Ht+6nY7gPbwO54ZOIAN19SNvqhlbsrgl900Hb1d3aELZUv3Y48BQSv01fht+WYMcYjwIJ5VSrHKkQ==;EndpointSuffix=core.windows.net
 
-Notes for Craig about my first time on the VM
-
-- should give it a fun GNU Radio background or something =)
-- desktop icons?
-- would have been nice if there was a cout/print after the blob finished storing so i know it worked
-- the blob source should have a repeat option, like file source *very important*
+Make note of the storage account's URL, which is based on your storage account name, using the format:  https://yoursa.blob.core.windows.net replacing yoursa with your storage account name.
