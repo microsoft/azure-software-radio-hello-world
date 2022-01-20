@@ -1,6 +1,16 @@
 
 ## Stage 1 (GNU Radio Setup and Viewing a Signal)
 
+GNU Radio is a free & open-source software development toolkit that provides signal processing blocks to implement software-defined radios (SDRs). It can be used with readily-available RF hardware, or without hardware in a simulation-like environment. It is widely used in research, industry, academia, government, and hobbyist environments to support both wireless communications research and real-world radio systems.  Using a framework like GNU Radio to create applications allows for more easily sharing your application with others.
+
+<img src="https://raw.githubusercontent.com/gnuradio/gr-logo/master/gnuradio_logo_web.svg" width="300"/>
+
+Throughout the stages of this tutorial we will show examples of performing SDR in the cloud, using Azure.
+
+To get started, we offer two different methods of setting up the Ubuntu environment: [starting from a fresh Ubuntu 20 VM](#Starting-from-a-Fresh-Ubuntu-20-VM) or [using our GNU Radio development VM in Azure Marketplace]().
+
+### Starting from a Fresh Ubuntu 20 VM
+
 Create an Ubuntu 20.04 LTS Server VM, SSH in, and set up remote desktop either [using these steps](http://go.microsoft.com/fwlink/?LinkId=2116615) or the commands below:
 
 ```console
@@ -13,7 +23,6 @@ echo xfce4-session >~/.xsession
 sudo service xrdp restart
 ```
 
-### Installing GNU Radio from Source
 Once you have a remote desktop connection into the VM, we can install GNU Radio.  In this section we will be installing GNU Radio from source, as it gaurantees the best compatbility with 3rd party GNU Radio modules that we will want to use, and lets us use one of the latest versions.
 
 We will first install the prerequisites:
@@ -54,16 +63,54 @@ sudo ldconfig
 
 If no errors occured, you should now have GNU Radio installed!
 
+### Installing Azure SDR Blocks from Source
+
+Next let's install the gr-azure-software-radio out-of-tree module (OOT) so we can work with Azure.  In your terminal do the following commands:
+
+Install the Azure CLI with:
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+Next lets clone our azure-software-radio repo and install all dependencies with:
+```console
+sudo apt-get install -y cmake python3-pip liborc-dev doxygen
+cd ~
+git clone https://github.com/microsoft/azure-software-radio.git
+cd azure-software-radio/
+cd gr-azure-software-radio/
+pip install pytest pybind11
+pip install -r python/requirements.txt
+```
+
+Now to build and install the OOT:
+```console
+mkdir build
+cd build
+cmake ..
+make -j4
+sudo make install
+sudo ldconfig
+```
+
+At this point you have GNU Radio and the Azure SDR blocks installed, you can skip to the section [Running GNU Radio](#Running-GNU-Radio).  The next portion of this tutorial (below) will show you how to spin up our custom GNU Radio development VM which is currently on the Azure Marketplace in Private Preview.  It is essentially replicating what you just did, but with far fewer steps.
+
+
+### Creating GNU Radio Development VM in Azure
+
+Create an azure-software-radio VM using the instructions [here](https://github.com/microsoft/azure-software-radio/blob/documentation/cli-updates/pages/devvm.md]).
+
+---I'm assuming that at some point we'll just merge Hello World with these instructions?
+
+
 ### Running GNU Radio
 
-Next, open up GNU Radio Companion (GRC) in a new terminal:
+To actually use GNU Radio, you must open up GNU Radio Companion (GRC) in a new terminal.  GRC is the graphical interface or front-end for GNU Radio.  You can either search for the app in Ubuntu app drawer, or open a terminal and type:
 ```console
 gnuradio-companion
 ```
 
 <img src="images/opening_grc.png" width="500"/>
 
-Note the blocks available on the right panel, they are all under the Core category, which means they come with GNU Radio. Soon we'll add the Azure blocks and you'll see a new category.
+A window should pop up running GRC.  Note the blocks available on the right panel, they are all under the Core category, which means they come with GNU Radio. Soon we'll add the Azure blocks and you'll see a new category.
 
 <img src="images/grc.png" width="500"/>
 
@@ -100,45 +147,10 @@ Now run the flowgraph and you'll see just a single sine wave.  Close the plot, a
 
 If you would like a more detailed tutorial about creating and operating flowgraphs, please see [this GNU Radio tutorial](https://wiki.gnuradio.org/index.php/Guided_Tutorial_GRC).
 
-### Installing Azure SDR Blocks from Source
-
-Next let's install the gr-azure-software-radio out-of-tree module (OOT) so we can work with Azure.  Close GNU Radio altogether, and in your terminal do the following commands:
-
-Install the Azure CLI with:
-curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-
-Next lets clone our azure-software-radio repo and install all dependencies with:
-```console
-sudo apt-get install -y cmake python3-pip liborc-dev doxygen
-cd ~
-git clone https://github.com/microsoft/azure-software-radio.git
-cd azure-software-radio/
-cd gr-azure-software-radio/
-pip install pytest pybind11
-pip install -r python/requirements.txt
-```
-
-Now to build and install the OOT:
-```console
-mkdir build
-cd build
-cmake ..
-make -j4
-sudo make install
-sudo ldconfig
-```
-
-At this point you have GNU Radio and the Azure SDR blocks installed, you can skip to the section [Using GNU Radio with Azure](#Using GNU Radio with Azure).  The next portion of this tutorial will show you how to spin up our custom GNU Radio development VM which is currently on the Azure Marketplace in Private Preview.
-
-### Creating GNU Radio Development VM in Azure
-
-Create an azure-software-radio VM using the instructions [here](https://github.com/microsoft/azure-software-radio/blob/documentation/cli-updates/pages/devvm.md]).
 
 ### Using GNU Radio with Azure
 
-Open up a remote desktop connection to your VM. Before starting GRC, go into an Azure portal or use the CLI to add a storage account and container.  
-
-Open a terminal in the VM and do
+Close GRC if it is open.  Open a terminal in the VM and type:
 ```console
 az login
 ```
@@ -167,12 +179,22 @@ And then hover over the center of the signal with your cursor to see the frequen
 
 <img src="images/zoomed_in.png" width="500"/>
 
-If you would like to be able to upload your own signal recordings and store them in the cloud, you will need to create an Azure Storage Account, with at least one blob container.  The following lines can be entered into Azure CLI, either using Azure Portal in the browser or a local Azure CLI.
+### Setting Up Your Own Storage Account
 
-MENTION HOW THE PARTIAL AND FULL URL IS FORMED
-https://marcpubliciqblobssa.blob.core.windows.net
-public-iq-blobs
-connection string:
-DefaultEndpointsProtocol=https;AccountName=marcpubliciqblobssa;AccountKey=+MGGfNpP6Ht+6nY7gPbwO54ZOIAN19SNvqhlbsrgl900Hb1d3aELZUv3Y48BQSv01fht+WYMcYjwIJ5VSrHKkQ==;EndpointSuffix=core.windows.net
+This last portion of Stage 1 is optional; we will show you how to set up your own Azure Storage Account so you can upload/download your own blobs.  If you would like to be able to upload your own signal recordings and store them in the cloud, you will need to create an Azure Storage Account with at least one blob container.  The following lines can be entered into Azure CLI, either using Azure Portal in the browser or a local Azure CLI, to create a storage account and container (replace my-rg with your resource group name, and 1234 with a unique set of numbers):
+```console
+az login
+az storage account create \
+  --name iqblobsa1234 \
+  --resource-group my-rg \
+  --location eastus \
+  --sku Standard_RAGRS \
+  --kind StorageV2
+az container create \
+  --resource-group my-rg
+  --name container1
+```
 
-Make note of the storage account's URL, which is based on your storage account name, using the format:  https://yoursa.blob.core.windows.net replacing yoursa with your storage account name.
+Note the name of your storage account and the name of your container, because it will determine what goes in the Blob Source/Sink block parameters in GNU Radio.  The URL will use the format: https://yoursa.blob.core.windows.net replacing yoursa with your storage account name.  The container name is entered as its own parameter in the block, and you also need to choose the name of the blob being read/written.  
+
+--- talk about SAS or connection strings depending on which way we go---
