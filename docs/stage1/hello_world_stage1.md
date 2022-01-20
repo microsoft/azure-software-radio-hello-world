@@ -167,7 +167,7 @@ In the same terminal, open GR with:
 gnuradio-companion
 ```
 
-Within GRC, open the flowgraph visualize_fm.grc in the flowgraphs directory of this repo. 
+Within GRC, open the flowgraph [visualize_fm.grc](./flowgraphs/visualize_fm.grc)  in the flowgraphs directory of this repo. 
 
 This example flowgraph consists of four blocks.  The samples are originating from the Blob Source, which is feeding a signal recording stored in blob storage.  The Blob Source has been preconfigured to connect to an Azure storage account we created to host several RF recordings, with an access level set to public read access.
 
