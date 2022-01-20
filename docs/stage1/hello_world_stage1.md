@@ -96,10 +96,13 @@ At this point you have GNU Radio and the Azure SDR blocks installed, you can ski
 
 ### Creating GNU Radio Development VM in Azure
 
-Create an azure-software-radio VM using the instructions [here](https://github.com/microsoft/azure-software-radio/blob/documentation/cli-updates/pages/devvm.md]).
+Create an azure-software-radio VM using the instructions [here](https://github.com/microsoft/azure-software-radio/blob/documentation/cli-updates/pages/devvm.md).
 
 ---I'm assuming that at some point we'll just merge Hello World with these instructions?
 
+Only addition needed to linked docs: in Step 3 when you go to create the Virtual Machine, under Size, note how it suggests using Standard_NV12s_v3.  This is because the NV series VMs have a GPU and are specifically designed for desktop accelerated applications and virtual desktops.  If you are using a trial Azure subscription and don't have access to NV series VMs, that's OK, we do not require a GPU for any of the steps in this tutorial.
+
+By using our preconfigured development VM, not only are you skipping the steps shown in the previous section of this tutorial, but you are also getting a VM that already has audio passthrough configured (e.g., for listening to a demodulated audio signal), as well as GPU support for applications like gr-fosphor.
 
 ### Running GNU Radio
 
