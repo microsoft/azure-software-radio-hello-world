@@ -23,7 +23,7 @@ echo xfce4-session >~/.xsession
 sudo service xrdp restart
 ```
 
-Once you have a remote desktop connection into the VM, we can install GNU Radio.  In this section we will be installing GNU Radio from source, as it gaurantees the best compatbility with 3rd party GNU Radio modules that we will want to use, and lets us use one of the latest versions.
+Once you have a remote desktop connection into the VM, we can install GNU Radio.  In this section we will be installing GNU Radio from source, as it guarantees the best compatibility with 3rd party GNU Radio modules that we will want to use, and lets us use one of the latest versions.
 
 We will first install the prerequisites:
 
@@ -45,7 +45,7 @@ make -j4
 sudo make install
 sudo ldconfig
 ```
-Now we can install GNU Radio, specifically version 3.9.  Note the first command below is a bandaid fix for a bug related to cmake finding boost and looking in the wrong spot.  
+Now we can install GNU Radio, specifically version 3.9.  Note the first command below is a band aid fix for a bug related to cmake finding boost and looking in the wrong spot.  
 
 ```console
 sudo ln -s /usr/include /include
@@ -61,7 +61,7 @@ sudo make install
 sudo ldconfig
 ```
 
-If no errors occured, you should now have GNU Radio installed!
+If no errors occurred, you should now have GNU Radio installed!
 
 ### Installing Azure SDR Blocks from Source
 
@@ -116,7 +116,7 @@ A window should pop up running GRC.  Note the blocks available on the right pane
 
 The main window is called the canvas, and it's where we will build our flowgraph.  A flowgraph is a connection of blocks through which a continuous stream of samples flows. The concept of a flowgraph is an acyclic directional graph with one or more source blocks (to insert samples into the flowgraph), and one or more sink blocks (to visualize or export samples from the flowgraph), and any signal processing blocks in between.
 
-To create our first flowgraph, start by clicking the magnitfying glass towards the top-right, and in the search box begin to type "Signal Source"; when you see it come up (it's under the Waveform Generators) category, 
+To create our first flowgraph, start by clicking the magnifying glass towards the top-right, and in the search box begin to type "Signal Source"; when you see it come up (it's under the Waveform Generators) category, 
 either double click it or drag it to the left, in order to add it to the canvas.  Repeat this process to add a Throttle block and QT GUI Time Sink block.
 
 <center><img src="images/first_blocks.png" width="500"/></center>
@@ -139,7 +139,7 @@ You should see two sine waves, Try zooming in by dragging a rectangle inside the
 
 <center><img src="images/complex_sin.png" width="500"/></center>
 
-You may have noticed there were two sine waves, that's because we were simulating a complex sinusoid which has a real and imagininary part.  For now let's simplify things 
+You may have noticed there were two sine waves, that's because we were simulating a complex sinusoid which has a real and imaginary part.  For now let's simplify things 
 and simulate a real sine wave.  Open each of the three blocks (double click) and change Type from complex to float.  You'll notice the input/output ports go from blue to orange.
 Now run the flowgraph and you'll see just a single sine wave.  Close the plot, and try changing the Signal Source's frequency from 1000 to 100, and run the flowgraph to see how it changes.
 
@@ -174,7 +174,7 @@ Hit the play button to run this new flowgraph, and you should see the following 
 
 <center><img src="images/fm_output.png" width="500"/></center>
 
-The top half is a spectrogram, a.k.a. waterfall plot, which displays frequency (x-axis) over time (y-axis).  This signal recording was created by tuning an SDR to 100 MHz, roughly the center of the FM radio band, and receiving 20 MHz of spectrum.  The bottom half shows the power spectral density, i.e. frequency domain, with a y-axis of magnitude.  Each squigly yellow/red vertical line you see is an FM radio station; some are being received at a higher power than others.  A real FM radio receiver would not receive the entire band, it would tune directly to one of these signals and receive with a bandwidth just wide enough to capture the signal.  The audio within each signal is not being demodulated as part of this flowgraph; that would require several additional blocks.
+The top half is a spectrogram, a.k.a. waterfall plot, which displays frequency (x-axis) over time (y-axis).  This signal recording was created by tuning an SDR to 100 MHz, roughly the center of the FM radio band, and receiving 20 MHz of spectrum.  The bottom half shows the power spectral density, i.e. frequency domain, with a y-axis of magnitude.  Each squiggly yellow/red vertical line you see is an FM radio station; some are being received at a higher power than others.  A real FM radio receiver would not receive the entire band, it would tune directly to one of these signals and receive with a bandwidth just wide enough to capture the signal.  The audio within each signal is not being demodulated as part of this flowgraph; that would require several additional blocks.
 
 Let's say you are interested in finding the precise center frequency of one of the FM radio signals.  You can zoom into one of them by selecting a rectangle with your cursor:
 
