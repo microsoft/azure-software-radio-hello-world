@@ -133,7 +133,7 @@ The blocks should change from red to blank indicating there are no errors.
 
 However, there is still an error in the Options block, because we haven't set the ID of our flowgraph.
 
-Double click the Options block, and change the ID parameter to whatever you want (e.g., my_first_flowgraph).  Next save the flowgraph, e.g. my_first_flowgraph.grc.
+Double click the Options block, and change the ID parameter to whatever you want (e.g., my_first_flowgraph).  Next save the flowgraph wherever you want, e.g. my_first_flowgraph.grc.
 Now hit the play button.  You will see a warning message pop up, this only happens once and can be ignored, just hit OK. 
 
 <center><img src="images/xterm_error.png" width="300"/></center>
