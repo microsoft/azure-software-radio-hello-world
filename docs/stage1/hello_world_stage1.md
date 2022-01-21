@@ -207,6 +207,9 @@ az container create \
 
 Note the name of your storage account and the name of your container, because it will determine what goes in the Blob Source/Sink block parameters in GNU Radio.  The URL will use the format: https://yoursa.blob.core.windows.net replacing yoursa with your storage account name.  The container name is entered as its own parameter in the block, and you also need to choose the name of the blob being read/written.  
 
---- talk about SAS or connection strings depending on which way we go---
+To get the connection string for your storage account, either use the Access Keys window in Azure Portal (when under the storage account), or type the following Azure CLI command:
+```console
+az storage account show-connection-string
+```
 
 For the next stage see **[Stage 2](stage2/hello_world_stage2.md)** 
