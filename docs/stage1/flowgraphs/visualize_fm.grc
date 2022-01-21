@@ -37,17 +37,17 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    authentication_method: connection_string
+    authentication_method: url_with_sas
     blob_name: fm_wide_20MHz_short.iq
     comment: ''
-    connection_str: DefaultEndpointsProtocol=https;AccountName=marcpubliciqblobssa;AccountKey=+MGGfNpP6Ht+6nY7gPbwO54ZOIAN19SNvqhlbsrgl900Hb1d3aELZUv3Y48BQSv01fht+WYMcYjwIJ5VSrHKkQ==;EndpointSuffix=core.windows.net
-    container_name: public-iq-blobs
+    connection_str: ''
+    container_name: fm-radio
     maxoutbuf: '0'
     minoutbuf: '0'
     queue_size: '4'
     retry_total: '10'
     type: fc32
-    url: ''
+    url: https://softwareradiohelloworld.blob.core.windows.net
     vlen: '1'
   states:
     bus_sink: false

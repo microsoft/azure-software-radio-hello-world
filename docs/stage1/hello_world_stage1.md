@@ -189,29 +189,10 @@ And then hover over the center of the signal with your cursor to see the frequen
 
 The point of this demonstration was to show how an RF recording stored in blob storage can be pulled down into a GNU Radio flowgraph, which can then visualize the recording in time and frequency. 
 
-### Setting Up Your Own Storage Account
+If you would like to be able to upload your own signal recordings and store them in the cloud, you will need to [create an Azure storage account](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-portal), and then [create a container](https://docs.microsoft.com/en-us/azure/storage/blobs/blob-containers-powershell) within that storage account.  The container's access level must be set to `Container (anonymous read access for containers and blobs)` to use the `url_with_sas` authentication option without having to actually add a SAS token to the URL.  Note the name of your storage account and the name of your container, because it will determine what goes in the Blob Source/Sink block parameters in GNU Radio.  The URL will use the format: https://yoursa.blob.core.windows.net replacing `yoursa` with your storage account name.  The container and blob name is entered as its own parameter in the block.
 
-This last portion of Stage 1 is optional; we will show you how to set up your own Azure Storage Account so you can upload/download your own blobs.  If you would like to be able to upload your own signal recordings and store them in the cloud, you will need to create an Azure Storage Account with at least one blob container.  The following lines can be entered into Azure CLI, either using Azure Portal in the browser or a local Azure CLI, to create a storage account and container (replace my-rg with your resource group name, and 1234 with a unique set of numbers):
-```console
-az login
-az storage account create \
-  --name iqblobsa1234 \
-  --resource-group my-rg \
-  --location eastus \
-  --sku Standard_RAGRS \
-  --kind StorageV2
-az container create \
-  --resource-group my-rg
-  --name container1
-```
+<center><img src="images/blob_source_properties.png" width="400"/></center>
 
-Note the name of your storage account and the name of your container, because it will determine what goes in the Blob Source/Sink block parameters in GNU Radio.  The URL will use the format: https://yoursa.blob.core.windows.net replacing yoursa with your storage account name.  The container name is entered as its own parameter in the block, and you also need to choose the name of the blob being read/written.  
+Additionally, if the access level is set as described, for convinience sake you can download the file via browser by going to the url plus the container and blob name appended on, for example:  https://softwareradiohelloworld.blob.core.windows.net/fm-radio/fm_wide_20MHz_short.iq
 
-To get the connection string for your storage account, either use the Access Keys window in Azure Portal (when under the storage account), or type the following Azure CLI command:
-```console
-az storage account show-connection-string
-```
-
-Note that using connection strings is, in general, not considered good security practice, as they essentially contain a password in plaintext.  We are only using them here because 1) the IQ blobs for these tutorials are intended to be shared publicly anyway, and 2) there are many different methods of authenticating to Azure, the details depend on your specific situation, and we didn't want to include that compexity in these beginner-level tutorials.
-
-For the next stage see **[Stage 2](stage2/hello_world_stage2.md)** 
+For the next stage see **[Stage 2](../stage2/hello_world_stage2.md)** 
