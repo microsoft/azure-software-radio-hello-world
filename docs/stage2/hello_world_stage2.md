@@ -110,12 +110,13 @@ Once the deployment has completed, navigate to your Stream Analytics job and fol
 2. Fill out the Event Hub page with the following values:
 
 |Setting	|Suggested value	|Description|
+|-----------|-------------------|-----------|
 |Input alias	|Event-Hub-Input	|Enter a name to identify the job’s input.|
 |Subscription	| \<Your subscription\>	|Select the Azure subscription that has the Event Hub you created.|
 |Event hub namespace|		|Select the event hub namespace you created previously section. All the event hub namespaces available in your current subscription are listed in the dropdown.|
 |Event Hub name|	MyEventHub	|Select the event hub you created previously. All the event hubs available in your current subscription are listed in the dropdown.|
 |Event Hub consumer group| \<Create new\>| Create a new event hub consumer group for this Streams Analytic job|
-|Authentication mode| \<Manged Identity\>| Creates a Managed Identity for the job to use. If you lack the premissions to create a Managed Identity in the subscription you are using, you can instead use the Connection String mode and copy it over from your Event Hub.
+|Authentication mode| \<Manged Identity\>| Creates a Managed Identity for the job to use. If you lack the premissions to create a Managed Identity in the subscription you are using, you can instead use the Connection String mode and copy it over from your Event Hub.|
 
 3. Leave other options to default values and select Save to save the settings.
 
@@ -126,11 +127,14 @@ Now it is time to create an output destination for the job:
 2. Fill out the Blob storage page with the following values:
 
 |Setting	|Suggested value	|Description|
+|-----------|-------------------|-----------|
 |Output alias|	PowerBI-Output	|Enter a name to identify the job’s output.|
 |Group Workspace	|\<Your PowerBI Group workspace\>	| Select the PowerBI Group workspace that is associated with the Microsoft account you are logged in under and you wish to use. |
 |Authentication Mode| Managed Identity | Creates a Managed Identity for the Streams Analytics job to access Power BI. If you lack the premission, you can use the User Token mode.|
 |Dataset name| Hello-World | This is the name of the dataset that will be created in PowerBI.|
 |Table name| adsb | This is the name of the table that will be created in the dataset.|
+
+
 3. Leave other options to default values and select Save to save the settings.
 
 Finally, the transformation query allows you to select which data goes to which output. For this example, we will be sending all of the data to the output:

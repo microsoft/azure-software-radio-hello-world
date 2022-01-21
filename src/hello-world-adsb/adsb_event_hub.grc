@@ -159,7 +159,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    authentication_method: connection_string
+    authentication_method: url_with_sas
     blob_name: adsb_capture.iq
     comment: ''
     connection_str: BlobEndpoint=https://softwareradiohelloworld.blob.core.windows.net/;QueueEndpoint=https://softwareradiohelloworld.queue.core.windows.net/;FileEndpoint=https://softwareradiohelloworld.file.core.windows.net/;TableEndpoint=https://softwareradiohelloworld.table.core.windows.net/;SharedAccessSignature=sv=2020-08-04&ss=b&srt=sco&sp=rltf&se=2023-02-02T04:11:08Z&st=2022-01-21T20:11:08Z&spr=https&sig=kgp2ovWg3As21SWyZYL%2Fuk0%2FsutYSJQIq5XbIpMbXW8%3D
@@ -169,7 +169,7 @@ blocks:
     queue_size: '4'
     retry_total: '10'
     type: fc32
-    url: ''
+    url: https://softwareradiohelloworld.blob.core.windows.net
     vlen: '1'
   states:
     bus_sink: false
