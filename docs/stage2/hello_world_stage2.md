@@ -1,6 +1,6 @@
-## Stage 2
+# Stage 2
 
-Stage 2 is split into two parts, first we will show how ADS-B signals can be decoded and sent to Azure event hub.  Next, we incorporate PowerBI to plot the location of aircraft on a map-based interface within Azure. 
+Stage 2 is split into two parts, first we will show how ADS-B signals can be decoded and sent to Azure event hub.  Next, we incorporate Power BI to plot the location of aircraft on a map-based interface within Azure. 
 
 Automatic Dependent Surveillance–Broadcast (ADS–B) is a wireless technology used by aircraft to broadcast their position and other onboard sensor data. The information can be received by air traffic control ground stations, as well as other aircraft, to provide situational awareness. ADS–B is automatic, i.e., it requires no pilot input. The data sent over ADS-B originates from the aircraft's navigation system and other sensors.  In terms of the signal, it's transmitted at 1090 MHz, uses pulse position modulation (PPM), and the signal has a bandwidth around 50 kHz (it's a very low data rate signal).
 
@@ -8,7 +8,7 @@ Automatic Dependent Surveillance–Broadcast (ADS–B) is a wireless technology 
 
 For those who skipped the manual installation of GNU Radio steps, this will be the first time installing a GNU Radio out-of-tree module (OOT) from source.  OOTs are an important part of GNU Radio, as GNU Radio only comes with a basic set of signal processing blocks, and most application-specific blocks are found in 3rd party OOTs.  In addition, if you build your own GNU Radio application, there is a good chance you will want to create your own OOT to contain the custom blocks created.  Most OOTs are installed using the same set of steps, although some have additional depedencies.
 
-### Installing ADS-B
+## Installing ADS-B
 
 The process of installing ADS-B onto a system with GNU Radio already installed is as follows.  Open a terminal and type:
 ```console
@@ -26,7 +26,7 @@ This process is the same for most GNU Radio OOTs, you simply replace the github 
 
 <center><img src="images/ads-b-blocks.png" width="500"/></center>
 
-### ADS-B and Event Hub
+## ADS-B and Event Hub
 
 Open GRC, but this time, launch it by opening Ubuntu's Terminal application and typing in: `gnuradio-companion`. The **gr-adsb** module will print out additional information in this Terminal window while it is running. Now, open the flowgraph [adsb_event_hub.grc](flowgraphs/adsb_event_hub.grc) which is in the flowgraphs directory within this repo. 
 
@@ -59,29 +59,35 @@ If you switch windows and bring up the Terminal window you used to launch GRC, y
 
 This is actually the data from the aircraft, which provides the aircraft location and heading, along with some identifying information. While this is useful for navigation systems, humans need to have this visualied and that is where Event Hub and Power BI come in. 
 
-### PowerBI and Maps Interface
+## Power BI and Maps Interface
 
 <center><img src="https://azurecomcdn.azureedge.net/cvt-87defe8a1be893369b86725ac97f713788aad571675c42234db9242a0f41f51b/images/page/services/event-hubs/serverless-streaming.svg" width="500"/></center>
 
-[Azure Event Hub](https://azure.microsoft.com/en-us/services/event-hubs/) is a real-time data ingestion service. We will be using it to recieve the ADS-B data that our GNU Radio flowgraph is generating and pass it along for visualization. [PowerBI](https://powerbi.microsoft.com/en-us/) makes it easy to build visualizations of your data and there is a [version](https://powerbi.com/) you can use in your browser. To connect Event Hubs to Power BI, we will be using the [Azure Stream Analytics](https://azure.microsoft.com/en-us/services/stream-analytics/) service which makes it easy to build data pipelines.
+[Azure Event Hub](https://azure.microsoft.com/en-us/services/event-hubs/) is a real-time data ingestion service. We will be using it to recieve the ADS-B data that our GNU Radio flowgraph is generating and pass it along for visualization. [Power BI](https://powerbi.microsoft.com/en-us/) makes it easy to build visualizations of your data and there is a [version](https://powerbi.com/) you can use in your browser. To connect Event Hubs to Power BI, we will be using the [Azure Stream Analytics](https://azure.microsoft.com/en-us/services/stream-analytics/) service which makes it easy to build data pipelines.
 
-#### Event Hubs
+### Event Hubs
 
 The first step is to create an Event Hub. There is documentation for doing using the [Azure Portal](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-create) or the [Azure CLI](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-quickstart-cli).
 
 After you have completed this, your new Event Hub should be list in the Resource Group you are using. You now need to get the Connection String for it, so the flowgraph can send messages to the Event Hub. Follow [these steps](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-get-connection-string) to get the Connection String and copy it to your clipboard. 
 
 Now return to the GRC window and find the Event Hub Sink block in the flowgraph.
+
 <center><img src="images/event-hub-sink-block.png"/></center>
+ 
  Right click the block and then select **Enable**. After that, double click to bring up the properties for the block. Select **connection_string** for the Auth Method and paste in the Connection String in the appropriate field. Enter the name of the Event Hub instance you created (not the namespace) in the Event Hub Name field. Now run the flowgraph again. 
  
  <center><img src="images/event-hub-sink-properties.png"/></center>
+ 
  If you go to the Azure Portal and navigate to your Event Hub instance, you should start to see the graphs show that messages are being recieved from the flowgraph.
+
  <center><img src="images/event-hub-graphs.png"/></center>
 
- #### Stream Analytics
+ ## Stream Analytics
 
  Now that we have the ADS-B in Azure, it is time to make it more accesible. Azure Stream Analytics makes it easy to connect services and applications to the streaming data coming from Event Hub. 
+
+### Create a Job
 
  Follow these steps to create a Stream Analytics Job:
  1. Sign in to the Azure portal.
@@ -104,6 +110,8 @@ Streaming units|	1	|Streaming units represent the computing resources that are r
  5. Click **Create**
  6. You should see a Deployment in progress... notification displayed in the top right of your browser window.
 
+### Add an Input
+
 Once the deployment has completed, navigate to your Stream Analytics job and follow these steps:
 
 1. Select **Inputs > Add Stream input > Event Hub**.
@@ -120,6 +128,8 @@ Once the deployment has completed, navigate to your Stream Analytics job and fol
 
 3. Leave other options to default values and select Save to save the settings.
 
+### Add an Output
+
 Now it is time to create an output destination for the job:
 
 1. Select **Outputs > Add > Power BI**.
@@ -129,13 +139,15 @@ Now it is time to create an output destination for the job:
 |Setting	|Suggested value	|Description|
 |-----------|-------------------|-----------|
 |Output alias|	PowerBI-Output	|Enter a name to identify the job’s output.|
-|Group Workspace	|\<Your PowerBI Group workspace\>	| Select the PowerBI Group workspace that is associated with the Microsoft account you are logged in under and you wish to use. |
+|Group Workspace	|\<Your Power BI Group workspace\>	| Select the Power BI Group workspace that is associated with the Microsoft account you are logged in under and you wish to use. |
 |Authentication Mode| Managed Identity | Creates a Managed Identity for the Streams Analytics job to access Power BI. If you lack the premission, you can use the User Token mode.|
-|Dataset name| Hello-World | This is the name of the dataset that will be created in PowerBI.|
+|Dataset name| Hello-World | This is the name of the dataset that will be created in Power BI.|
 |Table name| adsb | This is the name of the table that will be created in the dataset.|
 
 
 3. Leave other options to default values and select Save to save the settings.
+
+### Add a Query
 
 Finally, the transformation query allows you to select which data goes to which output. For this example, we will be sending all of the data to the output:
 
@@ -145,8 +157,48 @@ SELECT *
 INTO PowerBI-Output
 FROM Event-Hub-Input
 ```
-2. The query reads the data from Event Hub and streams it to PowerBI. Select **Save**.
+2. The query reads the data from Event Hub and streams it to Power BI. Select **Save**.
 
-#### PowerBI
+### Start the job
 
-The final step is to create a Dashboard in PowerBI to help visualize the data.
+Everything should be configured for your Stream Analytics job now. The next step is to start the job. Click the **Start** button in the upper left hand corner. This will bring up a blade providing you information about Job. Click the **Start** button on this blade. You should recieve a notification that the process has start started.
+
+
+## Power BI
+
+The final step is to create a Dashboard in Power BI to help visualize the data. Before getting started, run start the flowgraph running one more time. This will ensure that ADS-B data flows through the Event Hub and triggers Stream Analytics to create the Dataset in Power BI. It may take a minute or two for this to all propigate on the first run.
+
+To get started goto [Power BI](https://powerbi.com) and **Sign In**. 
+
+1. Select the Workspace you designated in your Stream Analytics job. You should see your Dataset listed in the Workspace.
+ <center><img src="images/powerbi-dataset.png"/></center>
+2. Now create a new report, by clicking on **New** in the upper left corner and selecting **Report**.
+ <center><img src="images/powerbi-new-report.png"/></center>
+3. Click **Pick a published dataset** and select the dataset from your Workspace.
+4. Now it is time to build your report! Click on the Map icon to add a map for visualizing the planes locations and resize it to fill the top half of the report.
+5. From the **Fields** column, drag the **latitude** key over into the **Latitude** field for the map visualization and do the same for longitude. Also drag the **icao** key into the **Legend** field.
+
+You should now see a map with the different planes location being plotted over time.
+
+ <center><img src="images/powerbi-map-fields.png"/></center>
+
+6. Let's add a graph of the planes' altitudes. Unselect the Map visualization and click on the Line Chart icon to add it and resize it fill the bottom left quarter of the report.
+
+7. Now, drag the **timestamp** key from the Dataset over to the **Axis**, the **altitude** key over to the **Values** field and the **icao** key over to the **Legend** field.
+
+You should now see a chart of the different planes altitude over time.
+
+ <center><img src="images/powerbi-altitude-fields.png"/></center>
+
+8. Finally, let's add a graph of the planes' speed. Unselect the speed chart and click on the Line Chart icon to add it. Resize it fill the bottom right quarter of the report.
+
+9. Now, drag the **timestamp** key from the Dataset over to the **Axis**, the **speed** key over to the **Values** field and the **icao** key over to the **Legend** field.
+
+ <center><img src="images/powerbi-speed-fields.png"/></center>
+
+
+ ### Congratulations!
+
+ You have successfully gone from collected RF data to an information rich visualization. Hopefully this help illustrate how Azure can streaming pipelines that can transform your data and help you better understand it!
+
+  <center><img src="images/powerbi-report.png"/></center>
