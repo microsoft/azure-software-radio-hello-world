@@ -28,7 +28,7 @@ This process is the same for most GNU Radio OOTs, you simply replace the github 
 
 ### ADS-B and Event Hub
 
-Open GRC, but this time, launch it by opening Ubuntu's Terminal application and typing in: `gnuradio-companion`. The **gr-adsb** module will print out additional information in this Terminal window while it is running. Now, open the flowgraph adsb_rx_2.grc which is in the stage2/flowgraphs directory. 
+Open GRC, but this time, launch it by opening Ubuntu's Terminal application and typing in: `gnuradio-companion`. The **gr-adsb** module will print out additional information in this Terminal window while it is running. Now, open the flowgraph [adsb_rx_2.grc](flowgraphs/adsb_rx_2.grc) which is in the flowgraphs directory within this repo. 
 
 <center><img src="images/ads-b-flowgraph.png" width="500"/></center>
 
