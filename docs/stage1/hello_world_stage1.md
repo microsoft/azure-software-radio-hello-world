@@ -212,4 +212,6 @@ To get the connection string for your storage account, either use the Access Key
 az storage account show-connection-string
 ```
 
+Note that using connection strings is, in general, not considered good security practice, as they essentially contain a password in plaintext.  We are only using them here because 1) the IQ blobs for these tutorials are intended to be shared publicly anyway, and 2) there are many different methods of authenticating to Azure, the details depend on your specific situation, and we didn't want to include that compexity in these beginner-level tutorials.
+
 For the next stage see **[Stage 2](stage2/hello_world_stage2.md)** 
