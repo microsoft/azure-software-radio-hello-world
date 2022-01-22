@@ -187,12 +187,16 @@ And then hover over the center of the signal with your cursor to see the frequen
 
 <center><img src="images/zoomed_in.png" width="500"/></center>
 
-The point of this demonstration was to show how an RF recording stored in blob storage can be pulled down into a GNU Radio flowgraph, which can then visualize the recording in time and frequency. 
+If you are using our GNU Radio development VM, and are on an NV-series VM with a discrete GPU, you can try replacing the two QT GUI blocks (delete or disable them) with a Fosphor Sink QT block.  You will have to set the Span (Hz) parameter to 20e6.  This Fosphor block is part of the gr-fosphor OOT, and it uses the GPU to compute the FFTs and has a fancier looking spectrum display.  If it worked, you should see the following output:
 
-If you would like to be able to upload your own signal recordings and store them in the cloud, you will need to [create an Azure storage account](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-portal), and then [create a container](https://docs.microsoft.com/en-us/azure/storage/blobs/blob-containers-powershell) within that storage account.  The container's access level must be set to `Container (anonymous read access for containers and blobs)` to use the `url_with_sas` authentication option without having to actually add a SAS token to the URL.  Note the name of your storage account and the name of your container, because it will determine what goes in the Blob Source/Sink block parameters in GNU Radio.  The URL will use the format: https://yoursa.blob.core.windows.net replacing `yoursa` with your storage account name.  The container and blob name is entered as its own parameter in the block.
+<center><img src="images/fosphor.png" width="500"/></center>
+
+Configuring the GPU and CUDA to work with GNU Radio is not a trivial task, but luckily the development VM comes with it already completed.  It also comes with audio passthrough to the host computer.
+
+Optionally, if you would like to be able to upload your own signal recordings and store them in the cloud, you will need to [create an Azure storage account](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-portal), and then [create a container](https://docs.microsoft.com/en-us/azure/storage/blobs/blob-containers-powershell) within that storage account.  The container's access level must be set to `Container (anonymous read access for containers and blobs)` to use the `url_with_sas` authentication option without having to actually add a SAS token to the URL.  Note the name of your storage account and the name of your container, because it will determine what goes in the Blob Source/Sink block parameters in GNU Radio.  The URL will use the format: https://yoursa.blob.core.windows.net replacing `yoursa` with your storage account name.  The container and blob name is entered as its own parameter in the block.
 
 <center><img src="images/blob_source_properties.png" width="400"/></center>
 
-Additionally, if the access level is set as described, for convinience sake you can download the file via browser by going to the url plus the container and blob name appended on, for example:  https://softwareradiohelloworld.blob.core.windows.net/fm-radio/fm_wide_20MHz_short.iq
+As a side note, if the access level is set as described, for convinience sake you can download the file via browser by going to the url plus the container and blob name appended on, for example:  https://softwareradiohelloworld.blob.core.windows.net/fm-radio/fm_wide_20MHz_short.iq
 
-For the next stage see **[Stage 2](../stage2/hello_world_stage2.md)** 
+The point of this entire demonstration was to show how an RF recording stored in blob storage can be pulled down into a GNU Radio flowgraph, which can then visualize the recording in time and frequency.  For the next stage see **[Stage 2](../stage2/hello_world_stage2.md)** 
