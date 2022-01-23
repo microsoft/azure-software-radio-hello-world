@@ -191,7 +191,19 @@ If you are using our GNU Radio development VM, and are on an NV-series VM with a
 
 <center><img src="images/fosphor.png" width="500"/></center>
 
-Configuring the GPU and CUDA to work with GNU Radio is not a trivial task, but luckily the development VM comes with it already completed.  It also comes with audio passthrough to the host computer.
+Configuring the GPU and CUDA to work with GNU Radio is not a trivial task, but luckily the development VM comes with it already completed. 
+
+Now let's actually demodulate and listen to the FM radio signals, note that for pass-through audio to work you will either need to be using our GNU Radio development VM or have configured audio-passthrough yourself.  Please open the [listen_to_fm.grc flowgraph](flowgraphs/listen_to_fm.grc). 
+
+<center><img src="images/listen_flowgraph.png" width="500"/></center>
+
+For now ignore the greyed out boxes, and the QT GUI boxes.  What is left represents the signal processing needed to actually extract the audio signal from the FM signal, which we call demodulation.  Because we started with a 20 MHz wide RF recording that contained many FM signals, we first have to "zoom in" to the signal we want to demodulate, which is what the Frequency Translating Filter does, it performs a frequency shift and decimation.  Next we low pass filter to get rid of as much noise and adjacent signals as possible.  The output is then fed through the wideband FM reiceve block, which performs the actual demodulation, it converts the variations in frequency to variations in amplitude.  The output is our audio signal, we pass it through a Multiply Constant block which acts as our volume knob, and lastly feed it into the Audio Sink block which attempts to play it through the computer's sound.
+
+When you run the flowgraph you will notice two adjustable bars: one for the volume knob and another to tune the radio.  It is set to perform the frequency shift in increments of 100 kHz, and if you recall, our original signal was centered at 100 MHz.  This will let us tune exactly to the frequencies of these FM radio stations, such as 101.1 MHz and 99.5 MHz.  Try hitting the up arrow, or sliding the bar, next to the one labeled Frequency Shift.  As you sweep across frequency you should hear FM radio stations coming in and out, there might be a slight delay due to the signal processing and audio passthrough.  You will notice that as the hump-shaped signals reach the center of the frequency plot (at 0 MHz), they become clear.  This is because the signals must be brought to baseband, i.e., centered at 0 Hz, to be properly demodulated.
+
+NOTE THAT ON THE DEVELOPER VM I"M GETTING A LOT OF CHOPPYNESS, IT"S PLAYING AUDIO AT A DUTY CYCLE AROUND 50%, NOT A VERY GOOD EXPERIENCE!
+
+<center><img src="images/listen_gui.png" width="500"/></center>
 
 Optionally, if you would like to be able to upload your own signal recordings and store them in the cloud, you will need to [create an Azure storage account](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-portal), and then [create a container](https://docs.microsoft.com/en-us/azure/storage/blobs/blob-containers-powershell) within that storage account.  The container's access level must be set to `Container (anonymous read access for containers and blobs)` to use the `url_with_sas` authentication option without having to actually add a SAS token to the URL.  Note the name of your storage account and the name of your container, because it will determine what goes in the Blob Source/Sink block parameters in GNU Radio.  The URL will use the format: https://yoursa.blob.core.windows.net replacing `yoursa` with your storage account name.  The container and blob name is entered as its own parameter in the block.
 
