@@ -92,7 +92,7 @@ Now return to the GRC window and find the Event Hub Sink block in the far right 
  Follow these steps to create a Stream Analytics Job:
  1. Sign in to the Azure portal.
  2. Select **Create a resource** in the upper left-hand corner of the Azure portal.
- 3. Select **Analytics > Stream Analytics** job from the results list.
+ 3. Select **Analytics > Stream Analytics job** from the results list.
  4. Fill out the Stream Analytics job page with the following information:
 
 
@@ -126,7 +126,7 @@ Once the deployment has completed, navigate to your Stream Analytics job and fol
 |Event Hub consumer group| \<Create new\>| Create a new event hub consumer group for this Streams Analytic job|
 |Authentication mode| \<Manged Identity\>| Creates a Managed Identity for the job to use. If you lack the premissions to create a Managed Identity in the subscription you are using, you can instead use the Connection String mode and copy it over from your Event Hub.|
 
-3. Leave other options to default values and select Save to save the settings.
+3. Leave other options to default values and select **Save** to save the settings.
 
 ### Add an Output
 
@@ -134,7 +134,7 @@ Now it is time to create an output destination for the job:
 
 1. Select **Outputs > Add > Power BI**.
 
-2. Fill out the Blob storage page with the following values:
+2. Fill out the Power Bi (New output) page with the following values:
 
 |Setting	|Suggested value	|Description|
 |-----------|-------------------|-----------|
@@ -145,19 +145,19 @@ Now it is time to create an output destination for the job:
 |Table name| adsb | This is the name of the table that will be created in the dataset.|
 
 
-3. Leave other options to default values and select Save to save the settings.
+3. Leave other options to default values and select **Save** to save the settings.
 
 ### Add a Query
 
 Finally, the transformation query allows you to select which data goes to which output. For this example, we will be sending all of the data to the output:
 
-1.Select Query and update the query as follows:
+1.Select **Query** from the Resource Menu and update the query as follows:
 ```SQL
 SELECT *
 INTO PowerBI-Output
 FROM Event-Hub-Input
 ```
-2. The query reads the data from Event Hub and streams it to Power BI. Select **Save**.
+2. The query reads the data from Event Hub and streams it to Power BI. Select **Save query**.
 
 ### Start the job
 
