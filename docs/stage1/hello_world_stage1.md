@@ -7,7 +7,7 @@ GNU Radio is a free & open-source software development toolkit that provides sig
 
 Throughout the stages of this tutorial we will show examples of performing SDR in the cloud, using Azure.
 
-To get started, we offer two different methods of setting up the Ubuntu environment: [starting from a fresh Ubuntu 20 VM](#Starting-from-a-Fresh-Ubuntu-20-VM) or [using our GNU Radio development VM in Azure Marketplace]().
+To get started, we offer two different methods of setting up the Ubuntu environment: [starting from a fresh Ubuntu 20 VM](#Starting-from-a-Fresh-Ubuntu-20-VM) or [using our GNU Radio development VM in Azure Marketplace](Creating-GNU-Radio-Development-VM-in-Azure).
 
 ### Starting from a Fresh Ubuntu 20 VM
 
