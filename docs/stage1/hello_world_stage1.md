@@ -65,10 +65,10 @@ If no errors occurred, you should now have GNU Radio installed!
 
 ### Installing Azure SDR Blocks from Source
 
-Next let's install the gr-azure-software-radio out-of-tree module (OOT) so we can work with Azure.  In your terminal do the following commands:
-
-Install the Azure CLI with:
+Next let's install the gr-azure-software-radio out-of-tree module (OOT) so we can work with Azure.  A dependency is the Azure CLI which can be installed with:
+```console
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+```
 
 Next lets clone our azure-software-radio repo and install all dependencies with:
 ```console
@@ -92,7 +92,6 @@ sudo ldconfig
 ```
 
 At this point you have GNU Radio and the Azure SDR blocks installed, you can skip to the section [Running GNU Radio](#Running-GNU-Radio).  The next portion of this tutorial (below) will show you how to spin up our custom GNU Radio development VM which is currently on the Azure Marketplace in Private Preview.  It is essentially replicating what you just did, but with far fewer steps.
-
 
 ### Creating GNU Radio Development VM in Azure
 
