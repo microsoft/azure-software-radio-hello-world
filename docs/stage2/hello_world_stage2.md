@@ -57,7 +57,7 @@ If you switch windows and bring up the Terminal window you used to launch GRC, y
 ```
 
 
-This is actually the data from the aircraft, which provides the aircraft location and heading, along with some identifying information. While this is useful for navigation systems, humans need to have this visualied and that is where Event Hub and Power BI come in. 
+This is actually the data from the aircraft, which provides the aircraft location and heading, along with some identifying information. While this is useful for navigation systems, humans need to have this visualied and that is where Event Hub and Power BI come in. <>
 
 ## Power BI and Maps Interface
 
