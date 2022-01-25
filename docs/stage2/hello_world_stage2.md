@@ -122,7 +122,7 @@ Once the deployment has completed, navigate to your Stream Analytics job and fol
 |Input alias	|Event-Hub-Input	|Enter a name to identify the job’s input.|
 |Subscription	| \<Your subscription\>	|Select the Azure subscription that has the Event Hub you created.|
 |Event hub namespace|		|Select the event hub namespace you created previously section. All the event hub namespaces available in your current subscription are listed in the dropdown.|
-|Event Hub name|	MyEventHub	|Select the event hub you created previously. All the event hubs available in your current subscription are listed in the dropdown.|
+|Event Hub name|	|Select the event hub you created previously. All the event hubs available in your current subscription are listed in the dropdown.|
 |Event Hub consumer group| \<Create new\>| Create a new event hub consumer group for this Streams Analytic job|
 |Authentication mode| \<Manged Identity\>| Creates a Managed Identity for the job to use. If you lack the permissions to create a Managed Identity in the subscription you are using, you can instead use the Connection String mode and copy it over from your Event Hub.|
 
