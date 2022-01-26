@@ -56,7 +56,6 @@ If you switch windows and bring up the Terminal window you used to launch GRC, y
 66:06:02 a9f4c6          35000    64   476    48  38.5527191 -76.9266875    5
 ```
 
-
 This is actually the data from the aircraft, which provides the aircraft location and heading, along with some identifying information. While this is useful for navigation systems, humans need to have this visualized and that is where Event Hub and Power BI come in. 
 
 ## Power BI and Maps Interface
@@ -71,7 +70,7 @@ The first step is to create an Event Hub. There is documentation for doing using
 
 After you have completed this, your new Event Hub should be list in the Resource Group you are using. You now need to get the Connection String for it, so the flowgraph can send messages to the Event Hub. Follow [these steps](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-get-connection-string) to get the Connection String and copy it to your clipboard. 
 
-Now return to the GRC window and find the Event Hub Sink block in the flowgraph.
+Now return to the GRC window and find the Event Hub Sink block in the far right side of the flowgraph.
 
 <center><img src="images/event-hub-sink-block.png"/></center>
  
@@ -92,7 +91,7 @@ Now return to the GRC window and find the Event Hub Sink block in the flowgraph.
  Follow these steps to create a Stream Analytics Job:
  1. Sign in to the Azure portal.
  2. Select **Create a resource** in the upper left-hand corner of the Azure portal.
- 3. Select **Analytics > Stream Analytics** job from the results list.
+ 3. Select **Analytics > Stream Analytics job** from the results list.
  4. Fill out the Stream Analytics job page with the following information:
 
 
@@ -126,7 +125,7 @@ Once the deployment has completed, navigate to your Stream Analytics job and fol
 |Event Hub consumer group| \<Create new\>| Create a new event hub consumer group for this Streams Analytic job|
 |Authentication mode| \<Manged Identity\>| Creates a Managed Identity for the job to use. If you lack the permissions to create a Managed Identity in the subscription you are using, you can instead use the Connection String mode and copy it over from your Event Hub.|
 
-3. Leave other options to default values and select Save to save the settings.
+3. Leave other options to default values and select **Save** to save the settings.
 
 ### Add an Output
 
@@ -134,7 +133,7 @@ Now it is time to create an output destination for the job:
 
 1. Select **Outputs > Add > Power BI**.
 
-2. Fill out the Blob storage page with the following values:
+2. Fill out the Power Bi (New output) page with the following values:
 
 |Setting	|Suggested value	|Description|
 |-----------|-------------------|-----------|
@@ -145,19 +144,19 @@ Now it is time to create an output destination for the job:
 |Table name| adsb | This is the name of the table that will be created in the dataset.|
 
 
-3. Leave other options to default values and select Save to save the settings.
+3. Leave other options to default values and select **Save** to save the settings.
 
 ### Add a Query
 
 Finally, the transformation query allows you to select which data goes to which output. For this example, we will be sending all of the data to the output:
 
-1.Select Query and update the query as follows:
+1.Select **Query** from the Resource Menu and update the query as follows:
 ```SQL
 SELECT *
 INTO PowerBI-Output
 FROM Event-Hub-Input
 ```
-2. The query reads the data from Event Hub and streams it to Power BI. Select **Save**.
+2. The query reads the data from Event Hub and streams it to Power BI. Select **Save query**.
 
 ### Start the job
 
