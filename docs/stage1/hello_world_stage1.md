@@ -95,13 +95,13 @@ At this point you have GNU Radio and the Azure SDR blocks installed, you can ski
 
 ### Creating GNU Radio Development VM in Azure
 
+By using our preconfigured development VM, not only are you skipping the steps shown in the previous section of this tutorial, but you are also getting a VM that already has audio passthrough configured (e.g., for listening to a demodulated audio signal), as well as GPU support for applications like gr-fosphor.
+
 Create an azure-software-radio VM using the instructions [here](https://github.com/microsoft/azure-software-radio/blob/documentation/cli-updates/pages/devvm.md).
 
 ---I'm assuming that at some point we'll just merge Hello World with these instructions?
 
 Only addition needed to linked docs: in Step 3 when you go to create the Virtual Machine, under Size, note how it suggests using Standard_NV12s_v3.  This is because the NV series VMs have a GPU and are specifically designed for desktop accelerated applications and virtual desktops.  If you are using a trial Azure subscription and don't have access to NV series VMs, that's OK, we do not require a GPU for any of the steps in this tutorial.
-
-By using our preconfigured development VM, not only are you skipping the steps shown in the previous section of this tutorial, but you are also getting a VM that already has audio passthrough configured (e.g., for listening to a demodulated audio signal), as well as GPU support for applications like gr-fosphor.
 
 ### Running GNU Radio
 
@@ -142,7 +142,7 @@ You should see two sine waves, Try zooming in by dragging a rectangle inside the
 <center><img src="images/complex_sin.png" width="700"/></center>
 
 You may have noticed there were two sine waves, that's because we were simulating a complex sinusoid which has a real and imaginary part.  For now let's simplify things 
-and simulate a real sine wave.  Open each of the three blocks (double click) and change Type from complex to float.  You'll notice the input/output ports go from blue to orange.
+and simulate a real sine wave (if you want to learn more about complex signals, we recommend [this tutorial](https://wiki.gnuradio.org/index.php?title=IQ_Complex_Tutorial)).  Open each of the three blocks (double click) and change Type from complex to float.  You'll notice the input/output ports go from blue to orange.
 Now run the flowgraph and you'll see just a single sine wave.  Close the plot, and try changing the Signal Source's frequency from 1000 to 100, and run the flowgraph to see how it changes.
 
 <center><img src="images/real_sin.png" width="700"/></center>
