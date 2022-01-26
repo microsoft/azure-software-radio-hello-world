@@ -4,9 +4,9 @@ Stage 2 is split into two parts, first we will show how ADS-B signals can be dec
 
 Automatic Dependent Surveillance–Broadcast (ADS–B) is a wireless technology used by aircraft to broadcast their position and other onboard sensor data. The information can be received by air traffic control ground stations, as well as other aircraft, to provide situational awareness. ADS–B is automatic, i.e., it requires no pilot input. The data sent over ADS-B originates from the aircraft's navigation system and other sensors.  In terms of the signal, it's transmitted at 1090 MHz, uses pulse position modulation (PPM), and the signal has a bandwidth around 50 kHz (it's a very low data rate signal).
 
-<center><img src="https://upload.wikimedia.org/wikipedia/commons/e/ee/FAA_NextGen_ADS-B_implementation.jpg" width="200"/></center>
+<center><img src="https://upload.wikimedia.org/wikipedia/commons/e/ee/FAA_NextGen_ADS-B_implementation.jpg" width="400"/></center>
 
-For those who skipped the manual installation of GNU Radio steps, this will be the first time installing a GNU Radio out-of-tree module (OOT) from source.  OOTs are an important part of GNU Radio, as GNU Radio only comes with a basic set of signal processing blocks, and most application-specific blocks are found in 3rd party OOTs.  In addition, if you build your own GNU Radio application, there is a good chance you will want to create your own OOT to contain the custom blocks created.  Most OOTs are installed using the same set of steps, although some have additional depedencies.
+For those who skipped the manual installation of GNU Radio steps, this will be the first time installing a GNU Radio out-of-tree module (OOT) from source.  OOTs are an important part of GNU Radio, as GNU Radio only comes with a basic set of signal processing blocks, and most application-specific blocks are found in 3rd party OOTs.  In addition, if you build your own GNU Radio application, there is a good chance you will want to create your own OOT to contain the custom blocks created.  Most OOTs are installed using the same set of steps, although some have additional dependencies.
 
 ## Installing ADS-B
 
@@ -24,13 +24,13 @@ sudo ldconfig
 
 This process is the same for most GNU Radio OOTs, you simply replace the github url with whichever OOT you are trying to install.  Note that some OOTs have dependencies beyond what GNU Radio depends on, and may have an extra `apt install` step.  You will know the installation of gr-adsb was successful because additional ADS-B blocks will be available in GNU Radio as shown in the red box highlighted below:
 
-<center><img src="images/ads-b-blocks.png" width="500"/></center>
+<center><img src="images/ads-b-blocks.png" width="700"/></center>
 
 ## ADS-B and Event Hub
 
 Open GRC, but this time, launch it by opening Ubuntu's Terminal application and typing in: `gnuradio-companion`. The **gr-adsb** module will print out additional information in this Terminal window while it is running. Now, open the flowgraph [adsb_event_hub.grc](flowgraphs/adsb_event_hub.grc) which is in the flowgraphs directory within this repo. 
 
-<center><img src="images/ads-b-flowgraph.png" width="500"/></center>
+<center><img src="images/ads-b-flowgraph.png" width="700"/></center>
 
 The first block, which is where the samples originate from, is the same Blob Source we used in Stage 1, but this time we are pulling down an RF recording that contains a capture of ADS-B, taken in the DC area.  The signal is converted from complex samples to magnitude squared, due to the nature of PPM modulation.  The ADS-B Framer/Demod/Decoder blocks work together to actually demodulate and decode the signal, we will not be diving into the details of how they work in this tutorial, but you can refer to [this tutorial](https://wiki.analog.com/resources/eval/user-guides/picozed_sdr/tutorials/adsb) for more information. 
 
@@ -38,7 +38,7 @@ The grey input/output ports may be new to you, they represent messages instead o
 
 When you run the flowgraph you should see the following output:
 
-<center><img src="images/ads-b-plot.png" width="500"/></center>
+<center><img src="images/ads-b-plot.png" width="700"/></center>
 
 This shows the signal over time, and the display is triggering in such a way that the beginning of each packet is aligned to the left side.  So we can see that this particular packet was roughly 65 microseconds in duration.  
 
@@ -56,14 +56,13 @@ If you switch windows and bring up the Terminal window you used to launch GRC, y
 66:06:02 a9f4c6          35000    64   476    48  38.5527191 -76.9266875    5
 ```
 
-
-This is actually the data from the aircraft, which provides the aircraft location and heading, along with some identifying information. While this is useful for navigation systems, humans need to have this visualied and that is where Event Hub and Power BI come in. <>
+This is actually the data from the aircraft, which provides the aircraft location and heading, along with some identifying information. While this is useful for navigation systems, humans need to have this visualized and that is where Event Hub and Power BI come in. 
 
 ## Power BI and Maps Interface
 
-<center><img src="https://azurecomcdn.azureedge.net/cvt-87defe8a1be893369b86725ac97f713788aad571675c42234db9242a0f41f51b/images/page/services/event-hubs/serverless-streaming.svg" width="500"/></center>
+<center><img src="https://azurecomcdn.azureedge.net/cvt-87defe8a1be893369b86725ac97f713788aad571675c42234db9242a0f41f51b/images/page/services/event-hubs/serverless-streaming.svg" width="700"/></center>
 
-[Azure Event Hub](https://azure.microsoft.com/en-us/services/event-hubs/) is a real-time data ingestion service. We will be using it to recieve the ADS-B data that our GNU Radio flowgraph is generating and pass it along for visualization. [Power BI](https://powerbi.microsoft.com/en-us/) makes it easy to build visualizations of your data and there is a [version](https://powerbi.com/) you can use in your browser. To connect Event Hubs to Power BI, we will be using the [Azure Stream Analytics](https://azure.microsoft.com/en-us/services/stream-analytics/) service which makes it easy to build data pipelines.
+[Azure Event Hub](https://azure.microsoft.com/en-us/services/event-hubs/) is a real-time data ingestion service. We will be using it to receive the ADS-B data that our GNU Radio flowgraph is generating and pass it along for visualization. [Power BI](https://powerbi.microsoft.com/en-us/) makes it easy to build visualizations of your data and there is a [version](https://powerbi.com/) you can use in your browser. To connect Event Hubs to Power BI, we will be using the [Azure Stream Analytics](https://azure.microsoft.com/en-us/services/stream-analytics/) service which makes it easy to build data pipelines.
 
 ### Event Hubs
 
@@ -79,13 +78,13 @@ Now return to the GRC window and find the Event Hub Sink block in the far right 
  
  <center><img src="images/event-hub-sink-properties.png"/></center>
  
- If you go to the Azure Portal and navigate to your Event Hub instance, you should start to see the graphs show that messages are being recieved from the flowgraph.
+ If you go to the Azure Portal and navigate to your Event Hub instance, you should start to see the graphs show that messages are being received from the flowgraph.
 
  <center><img src="images/event-hub-graphs.png"/></center>
 
  ## Stream Analytics
 
- Now that we have the ADS-B in Azure, it is time to make it more accesible. Azure Stream Analytics makes it easy to connect services and applications to the streaming data coming from Event Hub. 
+ Now that we have the ADS-B in Azure, it is time to make it more accessible. Azure Stream Analytics makes it easy to connect services and applications to the streaming data coming from Event Hub. 
 
 ### Create a Job
 
@@ -122,9 +121,9 @@ Once the deployment has completed, navigate to your Stream Analytics job and fol
 |Input alias	|Event-Hub-Input	|Enter a name to identify the job’s input.|
 |Subscription	| \<Your subscription\>	|Select the Azure subscription that has the Event Hub you created.|
 |Event hub namespace|		|Select the event hub namespace you created previously section. All the event hub namespaces available in your current subscription are listed in the dropdown.|
-|Event Hub name|	MyEventHub	|Select the event hub you created previously. All the event hubs available in your current subscription are listed in the dropdown.|
+|Event Hub name|	|Select the event hub you created previously. All the event hubs available in your current subscription are listed in the dropdown.|
 |Event Hub consumer group| \<Create new\>| Create a new event hub consumer group for this Streams Analytic job|
-|Authentication mode| \<Manged Identity\>| Creates a Managed Identity for the job to use. If you lack the premissions to create a Managed Identity in the subscription you are using, you can instead use the Connection String mode and copy it over from your Event Hub.|
+|Authentication mode| \<Manged Identity\>| Creates a Managed Identity for the job to use. If you lack the permissions to create a Managed Identity in the subscription you are using, you can instead use the Connection String mode and copy it over from your Event Hub.|
 
 3. Leave other options to default values and select **Save** to save the settings.
 
@@ -161,7 +160,7 @@ FROM Event-Hub-Input
 
 ### Start the job
 
-Everything should be configured for your Stream Analytics job now. The next step is to start the job. Click the **Start** button in the upper left hand corner. This will bring up a blade providing you information about Job. Click the **Start** button on this blade. You should recieve a notification that the process has start started.
+Everything should be configured for your Stream Analytics job now. The next step is to start the job. Click the **Start** button in the upper left hand corner. This will bring up a blade providing you information about Job. Click the **Start** button on this blade. You should receive a notification that the process has start started.
 
 
 ## Power BI
