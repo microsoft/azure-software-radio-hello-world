@@ -6,10 +6,10 @@ GNU Radio is a free & open-source software development toolkit that provides sig
 
 Throughout the stages of this tutorial we will show examples of performing SDR in the cloud, using Azure. To get started, we offer two different methods of setting up the Ubuntu and GNU Radio environment:
 
-1. [Using our Azure software radio development VM in Azure Marketplace](Using-Azure-Software-Radio-Development-VM) (recommended)
+1. [Using our Azure software radio development VM in Azure Marketplace](#Using-Azure-Software-Radio-Development-VM) (recommended)
 2. Starting from a fresh Ubuntu 20 VM
 
-By using our preconfigured development VM, not only are you skipping the steps shown in the next section of this tutorial, but you are also getting a VM that already has audio passthrough configured (e.g., for listening to a demodulated audio signal), as well as GPU support for applications like gr-fosphor.  If you would like to start from a fresh Ubuntu 20 VM instead, continue this tutorial from here, otherwise skip to the [Using our Azure software radio development VM](Using-Azure-Software-Radio-Development-VM) section.
+By using our preconfigured development VM, not only are you skipping the steps shown in the next section of this tutorial, but you are also getting a VM that already has audio passthrough configured (e.g., for listening to a demodulated audio signal), as well as GPU support for applications like gr-fosphor.  If you would like to start from a fresh Ubuntu 20 VM instead, continue this tutorial from here, otherwise skip to the [Using our Azure software radio development VM](#Using-Azure-Software-Radio-Development-VM) section.
 
 ### Starting from a Fresh Ubuntu 20 VM
 
