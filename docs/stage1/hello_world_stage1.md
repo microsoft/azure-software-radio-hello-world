@@ -4,18 +4,21 @@ GNU Radio is a free & open-source software development toolkit that provides sig
 
 <center><img src="https://raw.githubusercontent.com/gnuradio/gr-logo/master/gnuradio_logo_web.svg" width="300"/></center>
 
-Throughout the stages of this tutorial we will show examples of performing SDR in the cloud, using Azure.
+Throughout the stages of this tutorial we will show examples of performing SDR in the cloud, using Azure. To get started, we offer two different methods of setting up the Ubuntu and GNU Radio environment:
 
-To get started, we offer two different methods of setting up the Ubuntu environment: [starting from a fresh Ubuntu 20 VM](#Starting-from-a-Fresh-Ubuntu-20-VM) or [using our GNU Radio development VM in Azure Marketplace](Creating-GNU-Radio-Development-VM-in-Azure).
+1. [Using our Azure software radio development VM in Azure Marketplace](Using-Azure-Software-Radio-Development-VM) (recommended)
+2. Starting from a fresh Ubuntu 20 VM
+
+By using our preconfigured development VM, not only are you skipping the steps shown in the next section of this tutorial, but you are also getting a VM that already has audio passthrough configured (e.g., for listening to a demodulated audio signal), as well as GPU support for applications like gr-fosphor.  If you would like to start from a fresh Ubuntu 20 VM instead, continue this tutorial from here, otherwise skip to the [Using our Azure software radio development VM](Using-Azure-Software-Radio-Development-VM) section.
 
 ### Starting from a Fresh Ubuntu 20 VM
 
-Create an Ubuntu 20.04 LTS Server VM, SSH in, and set up remote desktop either [using these steps](http://go.microsoft.com/fwlink/?LinkId=2116615) or the commands below:
+Create an Ubuntu 20.04 LTS Server VM, SSH in, and set up remote desktop either [using these steps](http://go.microsoft.com/fwlink/?LinkId=2116615) or simply run the commands below:
 
 ```console
 sudo apt-get update
 sudo apt-get -y install xfce4
-sudo apt install xfce4-session
+sudo apt-get install xfce4-session
 sudo apt-get -y install xrdp
 sudo systemctl enable xrdp
 echo xfce4-session >~/.xsession
@@ -27,11 +30,16 @@ Once you have a remote desktop connection into the VM, we can install GNU Radio.
 We will first install the prerequisites:
 
 ```console
-sudo apt install -y git cmake g++ libboost-all-dev libgmp-dev swig python3-numpy python3-mako python3-sphinx python3-lxml doxygen libfftw3-dev libsdl1.2-dev libgsl-dev libqwt-qt5-dev libqt5opengl5-dev python3-pyqt5 liblog4cpp5-dev libzmq3-dev python3-yaml python3-click python3-click-plugins python3-zmq python3-scipy python3-gi python3-gi-cairo gir1.2-gtk-3.0 libcodec2-dev libgsm1-dev pybind11-dev python3-matplotlib libsndfile1-dev python3-pip libsoapysdr-dev soapysdr-tools
+sudo apt-get install -y git cmake g++ libboost-all-dev libgmp-dev swig python3-numpy python3-mako \
+  python3-sphinx python3-lxml doxygen libfftw3-dev libsdl1.2-dev libgsl-dev libqwt-qt5-dev libqt5opengl5-dev \
+  python3-pyqt5 liblog4cpp5-dev libzmq3-dev python3-yaml python3-click python3-click-plugins python3-zmq \
+  python3-scipy python3-gi python3-gi-cairo gir1.2-gtk-3.0 libcodec2-dev libgsm1-dev pybind11-dev \
+  python3-matplotlib libsndfile1-dev python3-pip libsoapysdr-dev soapysdr-tools
+ 
 sudo pip install pygccxml pyqtgraph
 ```
 
-Next we must install Volk from source:
+Next we must install VOLK from source.  VOLK stands for Vector-Optimized Library of Kernels and it is designed to help GNU Radio work with the CPU's [SIMD](https://en.wikipedia.org/wiki/SIMD) instruction set. These are very powerful vector operations that can give signal processing a huge boost in performance. 
 
 ```console
 cd ~
@@ -92,9 +100,7 @@ sudo ldconfig
 
 At this point you have GNU Radio and the Azure SDR blocks installed, you can skip to the section [Running GNU Radio](#Running-GNU-Radio).  The next portion of this tutorial (below) will show you how to spin up our custom GNU Radio development VM which is currently on the Azure Marketplace in Private Preview.  It is essentially replicating what you just did, but with far fewer steps.
 
-### Creating GNU Radio Development VM in Azure
-
-By using our preconfigured development VM, not only are you skipping the steps shown in the previous section of this tutorial, but you are also getting a VM that already has audio passthrough configured (e.g., for listening to a demodulated audio signal), as well as GPU support for applications like gr-fosphor.
+### Using Azure Software Radio Development VM
 
 Create an azure-software-radio VM using the instructions [here](https://github.com/microsoft/azure-software-radio/blob/documentation/cli-updates/pages/devvm.md).
 
@@ -185,13 +191,13 @@ And then hover over the center of the signal with your cursor to see the frequen
 
 <center><img src="images/zoomed_in.png" width="700"/></center>
 
-If you are using our GNU Radio development VM, and are on an NV-series VM with a discrete GPU, you can try replacing the two QT GUI blocks (delete or disable them) with a Fosphor Sink QT block.  You will have to set the Span (Hz) parameter to 20e6.  This Fosphor block is part of the gr-fosphor OOT, and it uses the GPU to compute the FFTs and has a fancier looking spectrum display.  If it worked, you should see the following output:
+If you are using our Azure software radio development VM, and are on an NV-series VM with a discrete GPU, you can try replacing the two QT GUI blocks (delete or disable them) with a Fosphor Sink QT block.  You will have to set the Span (Hz) parameter to 20e6.  This Fosphor block is part of the gr-fosphor OOT, and it uses the GPU to compute the FFTs and has a fancier looking spectrum display.  If it worked, you should see the following output:
 
 <center><img src="images/fosphor.png" width="700"/></center>
 
 Configuring the GPU and CUDA to work with GNU Radio is not a trivial task, but luckily the development VM comes with it already completed. 
 
-Now let's actually demodulate and listen to the FM radio signals, note that for pass-through audio to work you will either need to be using our GNU Radio development VM or have configured audio-passthrough yourself.  Please open the [listen_to_fm.grc flowgraph](flowgraphs/listen_to_fm.grc). 
+Now let's actually demodulate and listen to the FM radio signals, note that for pass-through audio to work you will either need to be using our development VM or have configured audio-passthrough yourself.  Please open the [listen_to_fm.grc flowgraph](flowgraphs/listen_to_fm.grc). 
 
 <center><img src="images/listen_flowgraph.png" width="700"/></center>
 
@@ -199,7 +205,7 @@ For now ignore the greyed out boxes, and the QT GUI boxes.  What is left represe
 
 When you run the flowgraph you will notice two adjustable bars: one for the volume knob and another to tune the radio.  It is set to perform the frequency shift in increments of 100 kHz, and if you recall, our original signal was centered at 100 MHz.  This will let us tune exactly to the frequencies of these FM radio stations, such as 101.1 MHz and 99.5 MHz.  Try hitting the up arrow, or sliding the bar, next to the one labeled Frequency Shift.  As you sweep across frequency you should hear FM radio stations coming in and out, there might be a slight delay due to the signal processing and audio passthrough.  You will notice that as the hump-shaped signals reach the center of the frequency plot (at 0 MHz), they become clear.  This is because the signals must be brought to baseband, i.e., centered at 0 Hz, to be properly demodulated.
 
-NOTE THAT ON THE DEVELOPER VM I"M GETTING A LOT OF CHOPPYNESS, IT"S PLAYING AUDIO AT A DUTY CYCLE AROUND 50%, NOT A VERY GOOD EXPERIENCE!
+---NOTE THAT ON THE DEVELOPER VM I"M GETTING A LOT OF CHOPPYNESS, IT"S PLAYING AUDIO AT A DUTY CYCLE AROUND 50%, NOT A VERY GOOD EXPERIENCE!
 
 <center><img src="images/listen_gui.png" width="700"/></center>
 
