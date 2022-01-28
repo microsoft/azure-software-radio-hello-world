@@ -1,10 +1,10 @@
 ## Stage 1 (GNU Radio Setup and Viewing a Signal)
 
-GNU Radio is a free & open-source software development toolkit that provides signal processing blocks to implement software-defined radios (SDRs). It can be used with readily-available RF hardware, or without hardware in a simulation-like environment. It is widely used in research, industry, academia, government, and hobbyist environments to support both wireless communications research and real-world radio systems.  Using a framework like GNU Radio to create applications allows for more easily sharing your application with others.
+GNU Radio is a free & open-source software development toolkit that provides signal processing blocks to implement software-defined radios (SDRs). It can be used with readily-available RF hardware, or without hardware in a simulation-like environment. It is widely used in research, industry, academia, government, and hobbyist environments to support both wireless communications research and real-world radio systems.  Using a framework like GNU Radio to create applications makes it easy to share your application with others.
 
 <center><img src="https://raw.githubusercontent.com/gnuradio/gr-logo/master/gnuradio_logo_web.svg" width="300"/></center>
 
-Throughout the stages of this tutorial we will show examples of performing SDR in the cloud, using Azure. To get started, we offer two different methods of setting up the Ubuntu and GNU Radio environment:
+Throughout the stages of this tutorial we will show examples of performing SDR in the cloud, using Azure. To get started, we offer two different methods of setting up the Ubuntu based GNU Radio environment:
 
 1. [Using our Azure software radio development VM in Azure Marketplace](#Using-Azure-Software-Radio-Development-VM) (recommended)
 2. Starting from a fresh Ubuntu 20 VM
@@ -104,7 +104,7 @@ At this point you have GNU Radio and the Azure SDR blocks installed, you can ski
 
 Create an azure-software-radio VM using the instructions [here](https://github.com/microsoft/azure-software-radio/blob/documentation/cli-updates/pages/devvm.md).
 
-Note: in Step 3 when you create the Virtual Machine, under Size, note how it suggests using Standard_NV12s_v3.  This is because the NV series VMs have a GPU and are specifically designed for desktop accelerated applications and virtual desktops.  If you are using a trial Azure subscription and don't have access to NV series VMs, that's OK, we do not require a GPU for any of the steps in this tutorial.
+Note: in Step 3 when you create the Virtual Machine, under Size, note how it suggests using Standard_NV12s_v3.  This is because the NV series VMs have a GPU and are specifically designed for desktop accelerated applications and virtual desktops.  If you are using a trial Azure subscription and don't have access to NV series VMs, that's OK, we do not require a GPU for any of the steps in this tutorial. The [Dv2 series](https://docs.microsoft.com/en-us/azure/virtual-machines/dv2-dsv2-series) would be a good substitute for this tutorial.
 
 ### Running GNU Radio
 
@@ -121,12 +121,12 @@ A window should pop up running GRC.  Note the blocks available on the right pane
 
 The main window is called the canvas, and it's where we will build our flowgraph.  A flowgraph is a connection of blocks through which a continuous stream of samples flows. The concept of a flowgraph is an acyclic directional graph with one or more source blocks (to insert samples into the flowgraph), and one or more sink blocks (to visualize or export samples from the flowgraph), and any signal processing blocks in between.
 
-To create our first flowgraph, start by clicking the magnifying glass towards the top-right, and in the search box begin to type "Signal Source"; when you see it come up (it's under the Waveform Generators) category, 
-either double click it or drag it to the left, in order to add it to the canvas.  Repeat this process to add a Throttle block and QT GUI Time Sink block.
+To create our first flowgraph, start by clicking the magnifying glass towards the top-right, and in the search box begin to type `Signal Source`; when you see it come up (it's under the Waveform Generators) category, 
+either double click it or drag it to the left, in order to add it to the canvas.  Repeat this process to add a **Throttle** block and **QT GUI Time Sink** block.
 
 <center><img src="images/first_blocks.png" width="700"/></center>
 
-The Signal Source block will generate a simulated signal for us to visualize with the QT GUI Time Sink block, which will show us the time domain of that signal.  Because there is no hardware (e.g. SDRs) involved in this flowgraph, we need to add a Throttle block to prevent the Signal Source from generating samples as fast as the CPU allows.  
+The **Signal Source** block will generate a simulated signal for us to visualize with the **QT GUI Time Sink** block, which will show us the time domain of that signal.  Because there is no hardware (e.g. SDRs) involved in this flowgraph, we need to add a **Throttle** block to prevent the **Signal Source** from generating samples as fast as the CPU allows.  
 
 Now we must connect the blocks.  The blue ports represent the blocks inputs and outputs.  You can click on the output of one, then click on the input of another, to connect them.
 The blocks should change from red to blank indicating there are no errors.  
@@ -135,7 +135,7 @@ The blocks should change from red to blank indicating there are no errors.
 
 However, there is still an error in the Options block, because we haven't set the ID of our flowgraph.
 
-Double click the Options block, and change the ID parameter to whatever you want (e.g., my_first_flowgraph).  Next save the flowgraph wherever you want, e.g. my_first_flowgraph.grc.
+Double click the **Options** block, and change the ID parameter to whatever you want (e.g., my_first_flowgraph).  Next save the flowgraph wherever you want, e.g. my_first_flowgraph.grc.
 Now hit the play button.  You may see a warning message pop up, this only happens once and can be ignored, just hit OK. 
 
 <center><img src="images/xterm_error.png" width="500"/></center>
@@ -157,12 +157,19 @@ If you would like a more detailed tutorial about creating and operating flowgrap
 
 ### Using GNU Radio with Azure
 
-Close GRC if it is open.  Open a terminal in the VM and type:
+Close GRC if it is open.  Open a terminal in the VM and clone the source code for this tutorial:
+
+```console
+git clone https://github.com/microsoft/azure-software-radio-hello-world.git
+```
+
+This will copy the GNU Radio flowgraphs we will be using for this tutorial onto the VM. Now login to your Azure account:
+
 ```console
 az login
 ```
 
-Login into your azure account.
+Follow the prompts to authorize the VM.
 
 In the same terminal, open GR with:
 ```console
@@ -171,7 +178,7 @@ gnuradio-companion
 
 Within GRC, open the flowgraph [visualize_fm.grc](./flowgraphs/visualize_fm.grc)  in the flowgraphs directory of this repo. 
 
-This example flowgraph consists of four blocks.  The samples are originating from the Blob Source, which is feeding a signal recording stored in blob storage.  The Blob Source has been preconfigured to connect to an Azure storage account we created to host several RF recordings, with an access level set to public read access.
+This example flowgraph consists of four blocks.  The samples are originating from the **Blob Source**, which is feeding a signal recording stored in blob storage.  The **Blob Source** has been preconfigured to connect to an Azure storage account we created to host several RF recordings, with an access level set to public read access.
 
 <center><img src="images/blob_flowgraph.png" width="600"/></center>
 
@@ -179,7 +186,7 @@ Hit the play button to run this new flowgraph, and you should see the following 
 
 <center><img src="images/fm_output.png" width="700"/></center>
 
-The top half is a spectrogram, a.k.a. waterfall plot, which displays frequency (x-axis) over time (y-axis).  This signal recording was created by tuning an SDR to 100 MHz, roughly the center of the FM radio band, and receiving 20 MHz of spectrum.  The bottom half shows the power spectral density, i.e. frequency domain, with a y-axis of magnitude.  Each squiggly yellow/red vertical line you see is an FM radio station; some are being received at a higher power than others.  A real FM radio receiver would not receive the entire band, it would tune directly to one of these signals and receive with a bandwidth just wide enough to capture the signal.  The audio within each signal is not being demodulated as part of this flowgraph; that would require several additional blocks.
+The top half is a spectrogram, a.k.a. waterfall plot, which displays frequency (x-axis) over time (y-axis).  This signal recording was created by tuning an SDR to 100 MHz, roughly the center of the FM radio band, and receiving 20 MHz of spectrum.  The bottom half shows the power spectral density, i.e. frequency domain, with a y-axis of magnitude.  Each squiggly yellow/red vertical line you see is an FM radio station; some are being received at a higher power than others.  A real FM radio receiver would not receive the entire band, it would tune directly to one of these signals and receive it with a bandwidth just wide enough to capture the signal.  The audio within each signal is not being converted into audio, or demodulated, as part of this flowgraph; that would require several additional blocks.
 
 Let's say you are interested in finding the precise center frequency of one of the FM radio signals.  You can zoom into one of them by selecting a rectangle with your cursor:
 
