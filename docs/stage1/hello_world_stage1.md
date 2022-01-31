@@ -98,13 +98,15 @@ sudo make install
 sudo ldconfig
 ```
 
-At this point you have GNU Radio and the Azure SDR blocks installed, you can skip to the section [Running GNU Radio](#Running-GNU-Radio).  The next portion of this tutorial (below) will show you how to spin up our Azure software radio development VM which is currently on the Azure Marketplace in Private Preview.  It is essentially replicating what you just did, but with far fewer steps and added performance tweaks.
+At this point you have GNU Radio and the Azure SDR blocks installed, **you can skip to the section [Running GNU Radio](#Running-GNU-Radio).**
+
+  The next portion of this tutorial (below) will show you how to spin up our Azure software radio development VM which is currently on the Azure Marketplace in Private Preview.  It is essentially replicating what you just did, but with far fewer steps and added performance tweaks.
 
 ### Using Azure Software Radio Development VM
 
 Create an azure-software-radio VM using the instructions [here](https://github.com/microsoft/azure-software-radio/blob/documentation/cli-updates/pages/devvm.md).
 
-Note: in Step 3 when you create the Virtual Machine, under Size, note how it suggests using Standard_NV12s_v3.  This is because the NV series VMs have a GPU and are specifically designed for desktop accelerated applications and virtual desktops.  If you are using a trial Azure subscription and don't have access to NV series VMs, that's OK, we do not require a GPU for any of the steps in this tutorial. The [Dv2 series](https://docs.microsoft.com/en-us/azure/virtual-machines/dv2-dsv2-series) would be a good substitute for this tutorial.
+**Note:** in Step 3 when you create the Virtual Machine, under Size, note how it suggests using Standard_NV12s_v3.  This is because the NV series VMs have a GPU and are specifically designed for desktop accelerated applications and virtual desktops.  If you are using a trial Azure subscription and don't have access to NV series VMs, that's OK, we do not require a GPU for any of the steps in this tutorial. The [Dv2 series](https://docs.microsoft.com/en-us/azure/virtual-machines/dv2-dsv2-series) is a good substitute for this tutorial.
 
 ### Running GNU Radio
 
