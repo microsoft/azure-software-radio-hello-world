@@ -110,6 +110,12 @@ Create an azure-software-radio VM using the instructions [here](https://github.c
 
 ### Running GNU Radio
 
+Before you get started, lets clone a copy of these Tutorials to the VM. Open a terminal in the VM and run the following:
+
+```console
+git clone https://github.com/microsoft/azure-software-radio-hello-world.git
+```
+
 To actually use GNU Radio, you must open up GNU Radio Companion (GRC) in a new terminal.  GRC is the graphical interface or front-end for GNU Radio.  You can either search for the app in Ubuntu app drawer, or open a terminal and type:
 ```console
 gnuradio-companion
@@ -148,24 +154,18 @@ You should see two sine waves, Try zooming in by dragging a rectangle inside the
 
 You may have noticed there were two sine waves, that's because we were simulating a complex sinusoid which has a real and imaginary part.  For now let's simplify things 
 and simulate a real sine wave (if you want to learn more about complex signals, we recommend [this tutorial](https://wiki.gnuradio.org/index.php?title=IQ_Complex_Tutorial)).  Open each of the three blocks (double click) and change Type from complex to float.  You'll notice the input/output ports go from blue to orange.
-Now run the flowgraph and you'll see just a single sine wave.  Close the plot, and try changing the Signal Source's frequency from 1000 to 100, and run the flowgraph to see how it changes.
+Now run the flowgraph and you'll see just a single sine wave.  Close the plot, and try changing the **Signal Source**'s frequency from 1000 to 100, and run the flowgraph to see how it changes.
 
 <center><img src="images/real_sin.png" width="700"/></center>
 
-As a reference, the completed flowgraph can be found in flowgraphs/my_first_flowgraph.grc within this repo.  
+As a reference, the completed flowgraph can be found in [flowgraphs/my_first_flowgraph.grc](./flowgraphs/my_first_flowgraph.grc) within this repo.  
 
 If you would like a more detailed tutorial about creating and operating flowgraphs, please see [this GNU Radio tutorial](https://wiki.gnuradio.org/index.php/Guided_Tutorial_GRC).
 
 
 ### Using GNU Radio with Azure
 
-Close GRC if it is open.  Open a terminal in the VM and clone the source code for this tutorial:
-
-```console
-git clone https://github.com/microsoft/azure-software-radio-hello-world.git
-```
-
-This will copy the GNU Radio flowgraphs we will be using for this tutorial onto the VM. Now login to your Azure account:
+Close GRC if it is open.  Open a terminal in the VM and login to your Azure account:
 
 ```console
 az login
@@ -198,13 +198,13 @@ And then hover over the center of the signal with your cursor to see the frequen
 
 <center><img src="images/zoomed_in.png" width="700"/></center>
 
-If you are using our Azure software radio development VM, and are on an NV-series VM with a discrete GPU, you can try replacing the two QT GUI blocks (delete or disable them) with a Fosphor Sink QT block.  You will have to set the Span (Hz) parameter to 20e6.  This Fosphor block is part of the gr-fosphor OOT, and it uses the GPU to compute the FFTs and has a fancier looking spectrum display.  If it worked, you should see the following output:
+If you are using our Azure software radio development VM, and are on an NV-series VM with a discrete GPU, you can try replacing the two QT GUI blocks (delete or disable them) with a **Fosphor Sink QT block**.  You will have to set the Span (Hz) parameter to 20e6.  This Fosphor block is part of the gr-fosphor OOT, and it uses the GPU to compute the FFTs and has a fancier looking spectrum display.  If it worked, you should see the following output:
 
 <center><img src="images/fosphor.png" width="700"/></center>
 
 Configuring the GPU and CUDA to work with GNU Radio is not a trivial task, but luckily the development VM comes with it already completed. 
 
-Now let's actually demodulate and listen to the FM radio signals, note that for pass-through audio to work you will either need to be using our development VM or have configured audio-passthrough yourself.  Please open the [listen_to_fm.grc flowgraph](flowgraphs/listen_to_fm.grc). 
+Now let's actually demodulate and listen to the FM radio signals, note that for pass-through audio to work you will either need to be using our development VM or have configured audio-passthrough yourself.  Please open the [listen_to_fm.grc flowgraph](./flowgraphs/listen_to_fm.grc). 
 
 <center><img src="images/listen_flowgraph.png" width="700"/></center>
 
@@ -222,4 +222,7 @@ Optionally, if you would like to be able to upload your own signal recordings an
 
 As a side note, if the access level is set as described, for convenience sake you can download the file via browser by going to the url plus the container and blob name appended on, for example:  https://softwareradiohelloworld.blob.core.windows.net/fm-radio/fm_wide_20MHz_short.iq
 
-The point of this entire demonstration was to show how an RF recording stored in blob storage can be pulled down into a GNU Radio flowgraph, which can then visualize the recording in time and frequency.  For the next stage see **[Stage 2](../stage2/hello_world_stage2.md)** 
+
+## Congratulations!
+
+You have successfully replayed RF data that was stored in the Cloud and then used GNU Radio to process it and visualize the recording in both time and frequency. Pretty powerful stuff! For the next stage see **[Stage 2](../stage2/hello_world_stage2.md)** 

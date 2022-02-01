@@ -8,6 +8,12 @@ Automatic Dependent Surveillance-Broadcast (ADS-B) is a wireless technology used
 
 For those who skipped the manual installation of GNU Radio steps, this will be the first time installing a GNU Radio out-of-tree module (OOT) from source.  OOTs are an important part of GNU Radio, as GNU Radio only comes with a basic set of signal processing blocks, and most application-specific blocks are found in 3rd party OOTs.  In addition, if you build your own GNU Radio application, there is a good chance you will want to create your own OOT to contain the custom blocks created.  Most OOTs are installed using the same set of steps, although some have unique dependencies.
 
+If you haven't cloned a copy of these Tutorials to the VM yet, open a terminal in the VM and run the following:
+
+```console
+git clone https://github.com/microsoft/azure-software-radio-hello-world.git
+```
+
 ## Installing ADS-B
 
 The process of installing ADS-B onto a system with GNU Radio already installed is as follows.  Open a terminal and type:
