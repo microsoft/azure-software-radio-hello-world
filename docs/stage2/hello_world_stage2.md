@@ -14,9 +14,9 @@ If you haven't cloned a copy of these Tutorials to the VM yet, open a terminal i
 git clone https://github.com/microsoft/azure-software-radio-hello-world.git
 ```
 
-## Installing ADS-B
+## Installing GR-ADSB
 
-The process of installing ADS-B onto a system with GNU Radio already installed is as follows.  Open a terminal and type:
+The process of installing the **gr-adsb** OOT module onto a system with GNU Radio already installed is as follows.  Open a terminal and type:
 ```console
 git clone https://github.com/mhostetter/gr-adsb.git
 cd gr-adsb
@@ -72,7 +72,9 @@ This is actually the data from the aircraft, which provides the aircraft locatio
 
 ### Event Hubs
 
-The first step is to create a new Event Hub. There is documentation for doing so using the [Azure Portal](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-create) or the [Azure CLI](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-quickstart-cli).
+The first step is to create a new Event Hub. There is documentation for doing so using the [Azure Portal](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-create) or the [Azure CLI](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-quickstart-cli). 
+
+**Note:** When creating the Event Hubs Namespace, set the **Pricing Tier** to **Standard** and set the **Throughput Units** to **1**.
 
 After you have completed this, your new Event Hub should be listed in the Resource Group you are using. You now need to get the Connection String for it so the flowgraph can send messages to the Event Hub. Follow [these steps](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-get-connection-string) to get the Connection String and copy it to your clipboard. 
 
@@ -130,7 +132,7 @@ Once the deployment has completed, navigate to your Stream Analytics job and fol
 |Event hub namespace|		|Select the event hub namespace you created previously section. All the event hub namespaces available in your current subscription are listed in the dropdown.|
 |Event Hub name|	|Select the event hub you created previously. All the event hubs available in your current subscription are listed in the dropdown.|
 |Event Hub consumer group| \<Create new\>| Create a new event hub consumer group for this Streams Analytic job|
-|Authentication mode| \<Manged Identity\>| Creates a Managed Identity for the job to use. If you lack the permissions to create a Managed Identity in the subscription you are using, you can instead use the Connection String mode and copy it over from your Event Hub.|
+|Authentication mode| \<Connection String\>| This will automatically copy over the connection string from the Event Hub you selected.|
 
 3. Leave other options to default values and select **Save** to save the settings
 
@@ -146,28 +148,30 @@ Now it is time to create an output destination for the job:
 |-----------|-------------------|-----------|
 |Output alias|	PowerBI-Output	|Enter a name to identify the job’s output.|
 |Group Workspace	|\<Your Power BI Group workspace\>	| Select the Power BI Group workspace that is associated with the Microsoft account you are logged in under and you wish to use. |
-|Authentication Mode| Managed Identity | Creates a Managed Identity for the Streams Analytics job to access Power BI. If you lack the premission, you can use the User Token mode.|
+|Authentication Mode| User Token | Stores a User Token to authenticate with Power BI|
 |Dataset name| Hello-World | This is the name of the dataset that will be created in Power BI.|
 |Table name| adsb | This is the name of the table that will be created in the dataset.|
 
 
-3. Leave other options to default values and select **Save** to save the settings
+3. Leave other options to default values and click the large, blue **Authorize** button. You will then authenticate to Power BI, which will generate a User Token for this Job.
+
+4. Finally, select **Save** to save the settings
 
 ### Add a Query
 
 Finally, the transformation query allows you to select which data goes to which output. For this example, we will be sending all of the data to the output:
 
-1. Select **Query** from the Resource Menu and update the query as follows:
+1. Select **Query** from the Resource Menu and update the query as follows. (*If you used different names for the Input and Output, use those instead*):
 ```SQL
 SELECT *
-INTO PowerBI-Output
-FROM Event-Hub-Input
+INTO [PowerBI-Output]
+FROM [Event-Hub-Input]
 ```
 2. The query reads the data from Event Hub and streams it to Power BI. Select **Save query**
 
 ### Start the job
 
-Everything should now be configured for your Stream Analytics job. The next step is to start the job. Click the **Start** button in the upper left hand corner. This will bring up a blade providing you information about the job. Click the **Start** button on this blade. You should receive a notification that the process has started.
+Everything should now be configured for your Stream Analytics job. The next step is to start the job. Go back to the Overview screen for the Job and Click the **Start** button in the upper left hand corner. This will bring up a blade providing you information about the job. Click the **Start** button on this blade. You should receive a notification that the process has started.
 
 
 ## Power BI
