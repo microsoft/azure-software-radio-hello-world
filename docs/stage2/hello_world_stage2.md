@@ -8,9 +8,9 @@ Automatic Dependent Surveillance-Broadcast (ADS-B) is a wireless technology used
 
 For those who skipped the manual installation of GNU Radio steps, this will be the first time installing a GNU Radio out-of-tree module (OOT) from source.  OOTs are an important part of GNU Radio, as GNU Radio only comes with a basic set of signal processing blocks, and most application-specific blocks are found in 3rd party OOTs.  In addition, if you build your own GNU Radio application, there is a good chance you will want to create your own OOT to contain the custom blocks created.  Most OOTs are installed using the same set of steps, although some have unique dependencies.
 
-## Installing ADS-B
+## Installing GR-ADSB
 
-The process of installing ADS-B onto a system with GNU Radio already installed is as follows.  Open a terminal and type:
+The process of installing the **gr-adsb** OOT module onto a system with GNU Radio already installed is as follows.  Open a terminal and type:
 ```console
 git clone https://github.com/mhostetter/gr-adsb.git
 cd gr-adsb
@@ -66,7 +66,7 @@ This is actually the data from the aircraft, which provides the aircraft locatio
 
 ### Event Hubs
 
-The first step is to create a new Event Hub. There is documentation for doing so using the [Azure Portal](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-create) or the [Azure CLI](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-quickstart-cli).
+The first step is to create a new Event Hub. There is documentation for doing so using the [Azure Portal](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-create) or the [Azure CLI](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-quickstart-cli). **Note: When creating the Event Hubs Namespace, select Standard for the Pricing Tier and set the Throughput Units to 1.**
 
 After you have completed this, your new Event Hub should be listed in the Resource Group you are using. You now need to get the Connection String for it so the flowgraph can send messages to the Event Hub. Follow [these steps](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-get-connection-string) to get the Connection String and copy it to your clipboard. 
 
