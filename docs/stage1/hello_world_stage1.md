@@ -216,13 +216,6 @@ When you run the flowgraph you will notice two adjustable bars: one for the volu
 
 <center><img src="images/listen_gui.png" width="700"/></center>
 
-Optionally, if you would like to be able to upload your own signal recordings and store them in the cloud, you will need to [create an Azure storage account](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-portal), and then [create a container](https://docs.microsoft.com/en-us/azure/storage/blobs/blob-containers-powershell) within that storage account.  The container's access level must be set to `Container (anonymous read access for containers and blobs)` to use the `url_with_sas` authentication option without having to actually add a SAS token to the URL.  Note the name of your storage account and the name of your container, because it will determine what goes in the Blob Source/Sink block parameters in GNU Radio.  The URL will use the format: https://yoursa.blob.core.windows.net replacing `yoursa` with your storage account name.  The container and blob name is entered as its own parameter in the block.
-
-<center><img src="images/blob_source_properties.png" width="600"/></center>
-
-As a side note, if the access level is set as described, for convenience sake you can download the file via browser by going to the url plus the container and blob name appended on, for example:  https://softwareradiohelloworld.blob.core.windows.net/fm-radio/fm_wide_20MHz_short.iq
-
-
 ## Congratulations!
 
 You have successfully replayed RF data that was stored in the Cloud and then used GNU Radio to process it and visualize the recording in both time and frequency. Pretty powerful stuff! For the next stage see **[Stage 2](../stage2/hello_world_stage2.md)** 
