@@ -11,7 +11,7 @@ options:
     gen_linking: dynamic
     generate_options: qt_gui
     hier_block_src_path: '.:'
-    id: fm_recv_from_file
+    id: fm_listen
     max_nouts: '0'
     output_language: python
     placement: (0,0)
@@ -22,7 +22,7 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: fm_recv_from_file
+    title: fm_listen
     window_size: (1000,1000)
   states:
     bus_sink: false
@@ -42,9 +42,9 @@ blocks:
     min_len: '200'
     orient: QtCore.Qt.Horizontal
     rangeType: float
-    start: -10e6
+    start: -2e6
     step: 0.1e6
-    stop: 10e6
+    stop: 2e6
     value: '0'
     widget: counter_slider
   states:
@@ -58,7 +58,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: 20e6
+    value: 4e6
   states:
     bus_sink: false
     bus_source: false
@@ -78,7 +78,7 @@ blocks:
     start: '0'
     step: '0.1'
     stop: '2'
-    value: '0.5'
+    value: '0.2'
     widget: counter_slider
   states:
     bus_sink: false
@@ -127,8 +127,8 @@ blocks:
     affinity: ''
     alias: ''
     authentication_method: url_with_sas
-    blob_name: fm_wide_20MHz.iq
-    comment: This is the longer recording
+    blob_name: fm_wide_4MHz_repeated.iq
+    comment: ''
     connection_str: ''
     container_name: fm-radio
     maxoutbuf: '0'
@@ -144,7 +144,7 @@ blocks:
     bus_structure: null
     coordinate: [40, 132.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: blocks_multiply_const_vxx_0
   id: blocks_multiply_const_vxx
   parameters:
@@ -181,21 +181,23 @@ blocks:
     bus_structure: null
     coordinate: [336, 164.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: freq_xlating_fft_filter_ccc_0
   id: freq_xlating_fft_filter_ccc
   parameters:
     affinity: ''
     alias: ''
     center_freq: freq_shift
-    comment: Gets us down to 2 MHz
-    decim: '10'
+    comment: 'Gets us down to 2 MHz and
+
+      allows us to frequency shift'
+    decim: '2'
     maxoutbuf: '0'
     minoutbuf: '0'
     nthreads: '1'
     samp_delay: '0'
     samp_rate: samp_rate
-    taps: ' firdes.low_pass(1,samp_rate,samp_rate/20, 1e6)'
+    taps: ' firdes.low_pass(1,samp_rate,0.95e6, 0.1e6)'
   states:
     bus_sink: false
     bus_source: false
@@ -216,7 +218,7 @@ blocks:
     interp: '1'
     maxoutbuf: '0'
     minoutbuf: '0'
-    samp_rate: samp_rate/10
+    samp_rate: 2e6
     type: fir_filter_ccf
     width: 50e3
     win: window.WIN_HAMMING
@@ -245,7 +247,7 @@ blocks:
     autoscale: 'False'
     average: '0.2'
     axislabels: 'True'
-    bw: samp_rate/10
+    bw: 2e6
     color1: '"blue"'
     color10: '"dark blue"'
     color2: '"red"'
@@ -307,7 +309,7 @@ blocks:
     bus_structure: null
     coordinate: [384, 476.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: qtgui_freq_sink_x_0_0
   id: qtgui_freq_sink_x
   parameters:
