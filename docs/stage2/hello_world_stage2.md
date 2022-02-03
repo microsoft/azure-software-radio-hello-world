@@ -149,7 +149,7 @@ Now it is time to create an output destination for the job:
 |Output alias|	PowerBI-Output	|Enter a name to identify the job’s output.|
 |Group Workspace	|\<Your Power BI Group workspace\>	| Select the Power BI Group workspace that is associated with the Microsoft account you are logged in under and you wish to use. |
 |Authentication Mode| User Token | Stores a User Token to authenticate with Power BI|
-|Dataset name| Hello-World | This is the name of the dataset that will be created in Power BI.|
+|Dataset name| \<Your dataset name\> | This is the name of the dataset that will be created in Power BI.|
 |Table name| adsb | This is the name of the table that will be created in the dataset.|
 
 
@@ -188,7 +188,7 @@ Now go to [Power BI](https://powerbi.com) and **Sign In**.  The following steps 
 
 3. Click **Pick a published dataset** and select the dataset from your Workspace
 
-4. Now it is time to build your report! Click on the Map icon to add a map for visualizing the planes locations and resize it to fill the top half of the report
+4. Now it is time to build your report! Click on the **Map** icon to add a map for visualizing the planes locations and resize it to fill the top half of the report
 
 5. From the **Fields** column, drag the **latitude** key over into the **Latitude** field for the map visualization and do the same for longitude, then drag the **icao** key into the **Legend** field
 
