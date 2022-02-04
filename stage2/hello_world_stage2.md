@@ -1,6 +1,12 @@
 # Stage 2
 
-Stage 2 is split into two parts, first we will show how ADS-B signals can be decoded and sent to Azure event hub.  Next, we incorporate Power BI to plot the location of aircraft on a map-based interface within Azure. 
+Stage 2 is split into two parts.  First, we will show how ADS-B signals can be decoded and sent to Azure event hub.  Next, we incorporate Power BI to plot the locations of aircraft over time on a map-based interface. 
+
+## Prerequisites
+
+- As part of the second half of this stage you will need a Power BI account and access to at least one [Power BI Workspace](https://docs.microsoft.com/en-us/power-bi/collaborate-share/service-create-the-new-workspaces).  
+
+## Introduction
 
 Automatic Dependent Surveillance-Broadcast (ADS-B) is a wireless technology used by aircraft to broadcast their position and other onboard sensor data. The information can be received by air traffic control ground stations, as well as other aircraft, to provide situational awareness. ADS-B is automatic, i.e., it requires no pilot input. The data sent over ADS-B originates from the aircraft's navigation system and other sensors.  The signal is transmitted at 1090 MHz, uses pulse position modulation (PPM), and has a bandwidth around 50 kHz (it's a very low data rate signal).
 
@@ -14,7 +20,7 @@ If you haven't cloned a copy of these Tutorials to the VM yet, open a terminal i
 git clone https://github.com/microsoft/azure-software-radio-hello-world.git
 ```
 
-## Installing GR-ADSB
+## Installing the gr-adsb Out-of-Tree Module
 
 The process of installing the **gr-adsb** OOT module onto a system with GNU Radio already installed is as follows.  Open a terminal and type:
 ```console
@@ -48,7 +54,7 @@ When you run the flowgraph you should see the following output:
 
 This shows the signal over time, and the display is triggering in such a way that the beginning of each packet is aligned to the left side of the plot.  So we can see that this particular packet was roughly 65 microseconds in duration, but you will notice that there are packets of various length.
 
-If you switch windows and bring up the Terminal window you used to launch GRC, you might see a list of decoded messages (in some installations this will *not* show up in your terminal):
+If you switch windows and bring up the Terminal window you used to launch GRC, you might see a list of decoded messages (in some installations this will *not* show up in your terminal, but instead you will see less structured output in the bottom-left GRC console):
 
 ```
   Time    ICAO  Callsign  Alt  Climb Speed Hdng   Latitude    Longitude  Msgs
@@ -127,7 +133,7 @@ Once the deployment has completed, navigate to your Stream Analytics job and fol
 
 |Setting	|Suggested value	|Description|
 |-----------|-------------------|-----------|
-|Input alias	|Event-Hub-Input	|Enter a name to identify the jobs input.|
+|Input alias	|Event-Hub-Input	|Enter a name to identify the job's input.|
 |Subscription	| \<Your subscription\>	|Select the Azure subscription that has the Event Hub you created.|
 |Event hub namespace|		|Select the event hub namespace you created previously section. All the event hub namespaces available in your current subscription are listed in the dropdown.|
 |Event Hub name|	|Select the event hub you created previously. All the event hubs available in your current subscription are listed in the dropdown.|
@@ -147,8 +153,8 @@ Now it is time to create an output destination for the job:
 
 |Setting	|Suggested value	|Description|
 |-----------|-------------------|-----------|
-|Output alias|	PowerBI-Output	|Enter a name to identify the jobs output.|
-|Group Workspace	|\<Your Power BI Group workspace\>	| Select the Power BI Group workspace that is associated with the Microsoft account you are logged in under and you wish to use. |
+|Output alias|	PowerBI-Output	|Enter a name to identify the job's output.|
+|Group Workspace	|\<Your Power BI Group workspace\>	| Select the Power BI Group workspace that is associated with the Microsoft account you are logged in under and you wish to use. For creating a new workspace see [creating a Power BI workspace](https://docs.microsoft.com/en-us/power-bi/collaborate-share/service-create-the-new-workspaces). |
 |Authentication Mode| User Token | Stores a User Token to authenticate with Power BI|
 |Dataset name| \<Your dataset name\> | This is the name of the dataset that will be created in Power BI.|
 |Table name| adsb | This is the name of the table that will be created in the dataset.|
