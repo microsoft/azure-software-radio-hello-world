@@ -1,0 +1,191 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "eventHubNamespaceName": {
+            "type": "String",
+            "defaultValue": "mynamespace",
+            "metadata": {
+                "description": "The name of the Event Hub namespace, must be globally unique"
+            }
+        },
+        "streamingjobs_ADSB_Job_name": {
+            "defaultValue": "[concat('streamingjobs_ADSB_Job', uniqueString(resourceGroup().id))]",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.EventHub/namespaces",
+            "apiVersion": "2021-11-01",
+            "name": "[parameters('eventHubNamespaceName')]",
+            "location": "East US",
+            "sku": {
+                "name": "Standard",
+                "tier": "Standard",
+                "capacity": 1
+            },
+            "properties": {
+                "disableLocalAuth": false,
+                "zoneRedundant": true,
+                "isAutoInflateEnabled": false,
+                "maximumThroughputUnits": 0,
+                "kafkaEnabled": true
+            }
+        },
+        {
+            "type": "Microsoft.StreamAnalytics/streamingjobs",
+            "apiVersion": "2021-10-01-preview",
+            "name": "[parameters('streamingjobs_ADSB_Job_name')]",
+            "location": "East US",
+            "properties": {
+                "sku": {
+                    "name": "Standard"
+                },
+                "eventsOutOfOrderPolicy": "Adjust",
+                "outputErrorPolicy": "Stop",
+                "eventsOutOfOrderMaxDelayInSeconds": 0,
+                "eventsLateArrivalMaxDelayInSeconds": 5,
+                "dataLocale": "en-US",
+                "compatibilityLevel": "1.2",
+                "contentStoragePolicy": "SystemAccount",
+                "jobType": "Cloud"
+            }
+        },
+        {
+            "type": "Microsoft.EventHub/namespaces/AuthorizationRules",
+            "apiVersion": "2021-11-01",
+            "name": "[concat(parameters('eventHubNamespaceName'), '/RootManageSharedAccessKey')]",
+            "location": "East US",
+            "dependsOn": [
+                "[resourceId('Microsoft.EventHub/namespaces', parameters('eventHubNamespaceName'))]"
+            ],
+            "properties": {
+                "rights": [
+                    "Listen",
+                    "Manage",
+                    "Send"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.EventHub/namespaces/eventhubs",
+            "apiVersion": "2021-11-01",
+            "name": "[concat(parameters('eventHubNamespaceName'), '/myeventhub')]",
+            "location": "East US",
+            "dependsOn": [
+                "[resourceId('Microsoft.EventHub/namespaces', parameters('eventHubNamespaceName'))]"
+            ],
+            "properties": {
+                "messageRetentionInDays": 1,
+                "partitionCount": 1,
+                "status": "Active"
+            }
+        },
+        {
+            "type": "Microsoft.EventHub/namespaces/networkRuleSets",
+            "apiVersion": "2021-11-01",
+            "name": "[concat(parameters('eventHubNamespaceName'), '/default')]",
+            "location": "East US",
+            "dependsOn": [
+                "[resourceId('Microsoft.EventHub/namespaces', parameters('eventHubNamespaceName'))]"
+            ],
+            "properties": {
+                "publicNetworkAccess": "Enabled",
+                "defaultAction": "Allow",
+                "virtualNetworkRules": [],
+                "ipRules": []
+            }
+        },
+        {
+            "type": "Microsoft.StreamAnalytics/streamingjobs/inputs",
+            "apiVersion": "2021-10-01-preview",
+            "name": "[concat(parameters('streamingjobs_ADSB_Job_name'), '/Event-Hub-Input')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.StreamAnalytics/streamingjobs', parameters('streamingjobs_ADSB_Job_name'))]"
+            ],
+            "properties": {
+                "type": "Stream",
+                "datasource": {
+                    "type": "Microsoft.EventHub/EventHub",
+                    "properties": {
+                        "consumerGroupName": "ADSB-Job46456456_Event-Hub-Input_consumer_group",
+                        "eventHubName": "myeventhub",
+                        "serviceBusNamespace": "mynamespace639324",
+                        "sharedAccessPolicyName": "ADSB-Job46456456_Event-Hub-Input_policy",
+                        "authenticationMode": "ConnectionString"
+                    }
+                },
+                "compression": {
+                    "type": "None"
+                },
+                "serialization": {
+                    "type": "Json",
+                    "properties": {
+                        "encoding": "UTF8"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.StreamAnalytics/streamingjobs/outputs",
+            "apiVersion": "2021-10-01-preview",
+            "name": "[concat(parameters('streamingjobs_ADSB_Job_name'), '/PowerBI-Output')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.StreamAnalytics/streamingjobs', parameters('streamingjobs_ADSB_Job_name'))]"
+            ],
+            "properties": {
+                "datasource": {
+                    "type": "PowerBI",
+                    "properties": {
+                        "authenticationMode": "UserToken",
+                        "dataset": "mydataset",
+                        "table": "adsb",
+                        "groupId": "66fb01f6-7341-4e28-a259-29c454f39c6a",
+                        "groupName": "ASCII-Hello-World",
+                        "tokenUserPrincipalName": "youremail@microsoft.com",
+                        "tokenUserDisplayName": "Your Name"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.EventHub/namespaces/eventhubs/authorizationRules",
+            "apiVersion": "2021-11-01",
+            "name": "[concat(parameters('eventHubNamespaceName'), '/myeventhub/ADSB-Job46456456_Event-Hub-Input_policy')]",
+            "location": "East US",
+            "dependsOn": [
+                "[resourceId('Microsoft.EventHub/namespaces/eventhubs', parameters('eventHubNamespaceName'), 'myeventhub')]",
+                "[resourceId('Microsoft.EventHub/namespaces', parameters('eventHubNamespaceName'))]"
+            ],
+            "properties": {
+                "rights": [
+                    "Listen"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.EventHub/namespaces/eventhubs/consumergroups",
+            "apiVersion": "2021-11-01",
+            "name": "[concat(parameters('eventHubNamespaceName'), '/myeventhub/$Default')]",
+            "location": "East US",
+            "dependsOn": [
+                "[resourceId('Microsoft.EventHub/namespaces/eventhubs', parameters('eventHubNamespaceName'), 'myeventhub')]",
+                "[resourceId('Microsoft.EventHub/namespaces', parameters('eventHubNamespaceName'))]"
+            ],
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.EventHub/namespaces/eventhubs/consumergroups",
+            "apiVersion": "2021-11-01",
+            "name": "[concat(parameters('eventHubNamespaceName'), '/myeventhub/adsb-job46456456_event-hub-input_consumer_group')]",
+            "location": "East US",
+            "dependsOn": [
+                "[resourceId('Microsoft.EventHub/namespaces/eventhubs', parameters('eventHubNamespaceName'), 'myeventhub')]",
+                "[resourceId('Microsoft.EventHub/namespaces', parameters('eventHubNamespaceName'))]"
+            ],
+            "properties": {}
+        }
+    ]
+}
