@@ -53,6 +53,22 @@ We will now check if you have access to the developer VM.  If at any point below
 
 At this point you should be in the desktop of your VM, and all instructions will be done within the VM unless otherwise stated.   If you ran into any issues above, please reference [this guide](https://github.com/microsoft/azure-software-radio/blob/documentation/cli-updates/pages/devvm.md).
 
+## Reducing Graphic Latency of Remote Desktop
+
+This section is optional, and provides a few tweaks to improve the remote desktop user experience.
+
+1. Open a terminal within the VM and type `gsettings set org.gnome.desktop.interface enable-animations false`
+2. `sudo reboot`, the RDP session will close
+3. Before logging back into the VM again, in your Remote Desktop Connection settings click Show Options
+4. Go to the Display tab, and use a 1920 x 1080 pixels or lower resolution
+5. Go to the Experience tab, then choose "Modem (56 kbps)" which will turn off a bunch of visual features that we don't need 
+6. Connect to the VM
+7. Open a terminal within the VM and run `sudo apt-get install gnome-tweak-tool`
+8. Open the tool using `gnome-tweaks`
+9. In the GUI, go to the Extensions tab, and enable all three toggles, then close the tool
+
+You should now find the desktop experience a lot snappier.
+
 ## Running GNU Radio
 
 Before you get started, lets clone a copy of these Tutorials to the VM. Open a terminal in the VM and run the following:
