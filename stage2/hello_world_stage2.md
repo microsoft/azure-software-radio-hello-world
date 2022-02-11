@@ -78,7 +78,7 @@ This is actually the data from the aircraft, which provides the aircraft locatio
 
 ### Event Hubs
 
-The first step is to create a new Event Hub. There is documentation for doing so using the [Azure Portal](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-create) or the [Azure CLI](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-quickstart-cli). 
+The first step is to create a new Event Hub. There is documentation for doing so using the [Azure Portal](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-create) or the [Azure CLI](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-quickstart-cli).  Make sure to create both an Event Hubs namespace and an Event Hub under that namespace.
 
 **Note:** When creating the Event Hubs Namespace, set the **Pricing Tier** to **Standard** and set the **Throughput Units** to **1**.
 
@@ -215,7 +215,7 @@ You should now see a chart of the different planes' altitude over time:
 
 Finally, let's add a graph of the planes' speed. 
 
-8. Unselect the speed chart and click on the Line Chart icon to add it. Resize it fill the bottom right quarter of the report
+8. Unselect the altitude chart and click on the Line Chart icon to add it. Resize it fill the bottom right quarter of the report
 
 9. Now, drag the **timestamp** key from the Dataset over to the **Axis**, the **speed** key over to the **Values** field and the **icao** key over to the **Legend** field
 

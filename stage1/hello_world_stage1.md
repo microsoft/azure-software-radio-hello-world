@@ -1,4 +1,4 @@
-## Stage 1
+# Stage 1
 
 GNU Radio is a free & open-source software development toolkit that provides signal processing blocks to implement software-defined radios (SDRs). It can be used with readily-available RF hardware, or without hardware in a simulation-like environment. It is widely used in research, industry, academia, government, and hobbyist environments to support both wireless communications research and real-world radio systems.  Using a framework like GNU Radio to create applications makes it easy to share your application with others.
 
@@ -6,18 +6,70 @@ GNU Radio is a free & open-source software development toolkit that provides sig
 
 Throughout the stages of this tutorial we will show examples of performing SDR in the cloud, using Azure. To get started, we offer two different methods of setting up the Ubuntu based GNU Radio environment:
 
-1. [Using our Azure software radio development VM in Azure Marketplace](#Using-Azure-Software-Radio-Development-VM) (recommended)
-2. Starting from a fresh Ubuntu 20 VM
+1. Using our Azure software radio development VM in Azure Marketplace (recommended, simply continue below for this option)
+2. Starting from a fresh Ubuntu 20 VM [using these steps](vm_from_scratch.md)
 
-By using our preconfigured development VM, not only are you skipping the steps shown in the next section of this tutorial, but you are also getting a VM that already has audio passthrough configured (e.g., for listening to a demodulated audio signal), as well as GPU support for applications like gr-fosphor.  If you would like to start from a fresh Ubuntu 20 VM instead, jump to [Creating your own Ubuntu 20 VM](#starting-from-a-fresh-ubuntu-20-vm) section, then continue this tutorial from [here](#running-gnu-radio).
+By using our preconfigured development VM, not only are you skipping several install steps, but you are also getting a VM that already has audio passthrough configured (e.g., for listening to a demodulated audio signal), as well as GPU support for applications like gr-fosphor.
 
-### Using Azure Software Radio Development VM
-
-Create an azure-software-radio VM using the instructions [here](https://github.com/microsoft/azure-software-radio/blob/documentation/cli-updates/pages/devvm.md).
+## Using Azure Software Radio Development VM
 
 **Note:** in Step 3 when you create the Virtual Machine, under Size, note how it suggests using Standard_NV12s_v3.  This is because the NV series VMs have a GPU and are specifically designed for desktop accelerated applications and virtual desktops.  If you are using a trial Azure subscription and don't have access to NV series VMs, that's OK, we do not require a GPU for any of the steps in this tutorial. The [Dv2 series](https://docs.microsoft.com/en-us/azure/virtual-machines/dv2-dsv2-series) is a good substitute for this tutorial.
 
-### Running GNU Radio
+### Signing up for the Private Preview of the Azure software radio developer VM
+
+Currently the Azure software radio developer VM is in Private Preview and our team must first authorize you to be able to deploy the service.  To sign up for the Developer VM click [Here](https://forms.office.com/r/sbZqBUVUE0), fill in the required details and our team will ensure you get authorized within 24 hours for the service.  The next step will verify you have access.
+
+### Deployment of the Azure software radio developer VM
+
+We will now check if you have access to the developer VM.  If at any point below you run into trouble and need more detailed instructions, reference [this guide](https://github.com/microsoft/azure-software-radio/blob/documentation/cli-updates/pages/devvm.md).
+
+1. Open your browser and navigate to [Azure Portal](https://portal.azure.com) and sign-in.
+2. Click "Create a Resource" with the large plus sign.
+3. Type "software radio" in the search box, hit enter, and you should see the purple message "You have private products available" show up, as seen in the screenshot below.  Click View private products.
+   
+   ![PrivateProducts](images/private_products.png)
+
+4. If access has been approved the Marketplace will include "Azure software radio developer VM", click it and click Create.  Note, if you see two versions of the Azure software radio developer VM, do not select the offer marked preview, select the normal one.  If you don't see any listed and it has been more than 48 hours since you filled out the form, contact the Azure software radio developer VM team via email at azuresoftwareradio@microsoft.com.
+
+
+
+5. On the Create VM Page:
+   - Select the subscription which has been authorized for developer VM
+   - Select a new or existing resource group
+   - Enter a Name for the virtual machine
+   - Select your preferred region; we recommend using the region with the lowest latency, which you can easily determine using [this web app](https://azurespeedtest.azurewebsites.net/)
+   - Change Availability options to "No infrastructure redundancy required" (this is needed to be able to use the NV series VMs)
+   - Under Size click "see all sizes", choose an NV series if one is available in your region (if not, try using the next lowest latency region)
+   - For Authentication type, choose Password, as it will be needed to RDP into the VM
+   - The first page should look similar to the screenshot below
+   
+   ![VMCreateP1](images/creating_vm.png)
+
+6. Towards the top click the Management tab, and click the checkbox for System Managed Identity
+7. Click Review + Create at the bottom, then click Create
+8. After a few minutes it should say "Your Deployment is Complete", click the Go to resource button
+9. On the VM resource page, record the Public IP Address shown on the right side
+10. Start your favorite RDP client and enter the IP Address and user+password chosen during deployment
+
+At this point you should be in the desktop of your VM, and all instructions will be done within the VM unless otherwise stated.   If you ran into any issues above, please reference [this guide](https://github.com/microsoft/azure-software-radio/blob/documentation/cli-updates/pages/devvm.md).
+
+## Reducing Graphic Latency of Remote Desktop
+
+This section is optional, and provides a few tweaks to improve the remote desktop user experience.
+
+1. Open a terminal within the VM and type `gsettings set org.gnome.desktop.interface enable-animations false`
+2. `sudo reboot`, the RDP session will close
+3. Before logging back into the VM again, in your Remote Desktop Connection settings click Show Options
+4. Go to the Display tab, and use a 1920 x 1080 pixels or lower resolution
+5. Go to the Experience tab, then choose "Modem (56 kbps)" which will turn off a bunch of visual features that we don't need 
+6. Connect to the VM
+7. Open a terminal within the VM and run `sudo apt-get install gnome-tweak-tool`
+8. Open the tool using `gnome-tweaks`
+9. In the GUI, go to the Extensions tab, and enable all three toggles, then close the tool
+
+You should now find the desktop experience a lot snappier.
+
+## Running GNU Radio
 
 Before you get started, lets clone a copy of these Tutorials to the VM. Open a terminal in the VM and run the following:
 
@@ -72,7 +124,7 @@ As a reference, the completed flowgraph can be found in [flowgraphs/my_first_flo
 If you would like a more detailed tutorial about creating and operating flowgraphs, please see [this GNU Radio tutorial](https://wiki.gnuradio.org/index.php/Guided_Tutorial_GRC).
 
 
-### Using GNU Radio with Azure
+## Using GNU Radio with Azure
 
 Close GRC if it is open.  Open a terminal in the VM and login to your Azure account:
 
@@ -126,93 +178,3 @@ When you run the flowgraph you will notice two adjustable bars: one for the volu
 ## Congratulations!
 
 You have successfully replayed RF data that was stored in the Cloud and then used GNU Radio to process it and visualize the recording in both time and frequency. Pretty powerful stuff! For the next stage see **[Stage 2](../stage2/hello_world_stage2.md)** 
-
-### Starting from a Fresh Ubuntu 20 VM
-
-Create an Ubuntu 20.04 LTS Server VM, SSH in, and set up remote desktop either [using these steps](http://go.microsoft.com/fwlink/?LinkId=2116615) or simply run the commands below:
-
-```console
-sudo apt-get update
-sudo apt-get -y install xfce4
-sudo apt-get install xfce4-session
-sudo apt-get -y install xrdp
-sudo systemctl enable xrdp
-echo xfce4-session >~/.xsession
-sudo service xrdp restart
-```
-
-Once you have a remote desktop connection into the VM, we can install GNU Radio.  In this section we will be installing GNU Radio from source, as it guarantees the best compatibility with 3rd party GNU Radio modules that we will want to use, and lets us use one of the latest versions.
-
-We will first install the prerequisites:
-
-```console
-sudo apt-get install -y git cmake g++ libboost-all-dev libgmp-dev swig python3-numpy python3-mako \
-  python3-sphinx python3-lxml doxygen libfftw3-dev libsdl1.2-dev libgsl-dev libqwt-qt5-dev libqt5opengl5-dev \
-  python3-pyqt5 liblog4cpp5-dev libzmq3-dev python3-yaml python3-click python3-click-plugins python3-zmq \
-  python3-scipy python3-gi python3-gi-cairo gir1.2-gtk-3.0 libcodec2-dev libgsm1-dev pybind11-dev \
-  python3-matplotlib libsndfile1-dev python3-pip libsoapysdr-dev soapysdr-tools
- 
-sudo pip install pygccxml pyqtgraph
-```
-
-Next we must install VOLK from source.  VOLK stands for Vector-Optimized Library of Kernels and it is designed to help GNU Radio work with the CPU's [SIMD](https://en.wikipedia.org/wiki/SIMD) instruction set. These are very powerful vector operations that can give signal processing a huge boost in performance. 
-
-```console
-cd ~
-git clone --recursive https://github.com/gnuradio/volk.git
-cd volk
-mkdir build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release -DPYTHON_EXECUTABLE=/usr/bin/python3 ../
-make -j4
-sudo make install
-sudo ldconfig
-```
-Now we can install GNU Radio, specifically version 3.9.  Note the first command below is a band aid fix for a bug related to cmake finding boost and looking in the wrong spot.  
-
-```console
-sudo ln -s /usr/include /include
-cd ~
-git clone https://github.com/gnuradio/gnuradio.git
-cd gnuradio
-git checkout maint-3.9
-mkdir build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release -DPYTHON_EXECUTABLE=/usr/bin/python3 ../
-make -j4
-sudo make install
-sudo ldconfig
-```
-
-If no errors occurred, you should now have GNU Radio installed!
-
-### Installing Azure SDR Blocks from Source
-
-Next let's install the gr-azure-software-radio out-of-tree module (OOT) so we can work with Azure.  A dependency is the Azure CLI which can be installed with:
-```console
-curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-```
-
-Next lets clone our azure-software-radio repo and install all dependencies with:
-```console
-sudo apt-get install -y cmake python3-pip liborc-dev doxygen
-cd ~
-git clone https://github.com/microsoft/azure-software-radio.git
-cd azure-software-radio/
-cd gr-azure-software-radio/
-pip install pytest pybind11
-pip install -r python/requirements.txt
-```
-
-Now to build and install the OOT:
-```console
-mkdir build
-cd build
-cmake ..
-make -j4
-sudo make install
-sudo ldconfig
-```
-
-At this point you have GNU Radio and the Azure SDR blocks installed, **you can skip to the section [Running GNU Radio](#running-gnu-radio).**
-
