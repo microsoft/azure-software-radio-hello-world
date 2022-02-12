@@ -42,9 +42,9 @@ blocks:
     min_len: '200'
     orient: QtCore.Qt.Horizontal
     rangeType: float
-    start: -2e6
+    start: -1e6
     step: 0.1e6
-    stop: 2e6
+    stop: 1e6
     value: '0'
     widget: counter_slider
   states:
@@ -58,7 +58,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: 4e6
+    value: 2e6
   states:
     bus_sink: false
     bus_source: false
@@ -84,7 +84,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [800, 188.0]
+    coordinate: [800, 196.0]
     rotation: 0
     state: true
 - name: analog_wfm_rcv_0
@@ -127,7 +127,7 @@ blocks:
     affinity: ''
     alias: ''
     authentication_method: url_with_sas
-    blob_name: fm_wide_4MHz_repeated.iq
+    blob_name: fm_wide_2MHz_repeated.i16
     comment: ''
     connection_str: ''
     container_name: fm-radio
@@ -135,7 +135,7 @@ blocks:
     minoutbuf: '0'
     queue_size: '4'
     retry_total: '10'
-    type: fc32
+    type: s16
     url: https://softwareradiohelloworld.blob.core.windows.net
     vlen: '1'
   states:
@@ -145,6 +145,24 @@ blocks:
     coordinate: [40, 132.0]
     rotation: 0
     state: enabled
+- name: blocks_interleaved_short_to_complex_0
+  id: blocks_interleaved_short_to_complex
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale_factor: '1'
+    swap: 'False'
+    vector_input: 'False'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [280, 156.0]
+    rotation: 0
+    state: true
 - name: blocks_multiply_const_vxx_0
   id: blocks_multiply_const_vxx
   parameters:
@@ -179,7 +197,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [336, 164.0]
+    coordinate: [496, 164.0]
     rotation: 0
     state: enabled
 - name: freq_xlating_fft_filter_ccc_0
@@ -191,7 +209,7 @@ blocks:
     comment: 'Gets us down to 2 MHz and
 
       allows us to frequency shift'
-    decim: '2'
+    decim: '1'
     maxoutbuf: '0'
     minoutbuf: '0'
     nthreads: '1'
@@ -244,7 +262,7 @@ blocks:
     alpha7: '1.0'
     alpha8: '1.0'
     alpha9: '1.0'
-    autoscale: 'False'
+    autoscale: 'True'
     average: '0.2'
     axislabels: 'True'
     bw: 2e6
@@ -325,7 +343,7 @@ blocks:
     alpha7: '1.0'
     alpha8: '1.0'
     alpha9: '1.0'
-    autoscale: 'False'
+    autoscale: 'True'
     average: '0.1'
     axislabels: 'True'
     bw: samp_rate
@@ -388,7 +406,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [568, 140.0]
+    coordinate: [744, 44.0]
     rotation: 0
     state: disabled
 - name: qtgui_freq_sink_x_1
@@ -475,7 +493,9 @@ blocks:
 
 connections:
 - [analog_wfm_rcv_0, '0', blocks_multiply_const_vxx_0, '0']
-- [azure_software_radio_blob_source_0, '0', blocks_throttle_0, '0']
+- [azure_software_radio_blob_source_0, '0', blocks_interleaved_short_to_complex_0,
+  '0']
+- [blocks_interleaved_short_to_complex_0, '0', blocks_throttle_0, '0']
 - [blocks_multiply_const_vxx_0, '0', audio_sink_0, '0']
 - [blocks_throttle_0, '0', freq_xlating_fft_filter_ccc_0, '0']
 - [blocks_throttle_0, '0', qtgui_freq_sink_x_0_0, '0']
