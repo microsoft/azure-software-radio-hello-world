@@ -57,7 +57,7 @@ At this point you should be in the desktop of your VM, and all instructions will
 
 This section is optional, and provides a few tweaks to improve the remote desktop user experience.
 
-1. Open a terminal within the VM and type `gsettings set org.gnome.desktop.interface enable-animations false`
+1. Open a terminal within the VM (e.g., by clicking the top left corner, then typing "terminal") and type `gsettings set org.gnome.desktop.interface enable-animations false`
 2. `sudo reboot`, the RDP session will close
 3. Before logging back into the VM again, in your Remote Desktop Connection settings click Show Options
 4. Go to the Display tab, and use a 1920 x 1080 pixels or lower resolution
@@ -159,7 +159,7 @@ And then hover over the center of the signal with your cursor to see the frequen
 
 <center><img src="images/zoomed_in.png" width="700"/></center>
 
-If you are using our Azure software radio development VM, and are on an NV-series VM with a discrete GPU, you can try replacing the two QT GUI blocks (delete or disable them) with a **Fosphor Sink QT block**.  You will have to set the Span (Hz) parameter to 20e6.  This Fosphor block is part of the gr-fosphor OOT, and it uses the GPU to compute the FFTs and has a fancier looking spectrum display.  If it worked, you should see the following output:
+If you are using our Azure software radio development VM, and are on an NV-series VM with a discrete GPU, you can try replacing the two QT GUI blocks (delete or disable them using hotkey D) with a single **Fosphor Sink QT block**.  You will have to set the Span (Hz) parameter to 20e6.  This Fosphor block is part of the gr-fosphor OOT, and it uses the GPU to compute the FFTs and has a fancier looking spectrum display.  If it worked, you should see the following output:
 
 <center><img src="images/fosphor.png" width="700"/></center>
 

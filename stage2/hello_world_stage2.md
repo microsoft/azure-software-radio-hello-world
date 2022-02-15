@@ -4,7 +4,7 @@ Stage 2 is split into two parts.  First, we will show how ADS-B signals can be d
 
 ## Prerequisites
 
-- As part of the second half of this stage you will need a Power BI account and access to at least one [Power BI Workspace](https://docs.microsoft.com/en-us/power-bi/collaborate-share/service-create-the-new-workspaces).  
+- As part of the second half of this stage you will need a Power BI account and access to at least one [Power BI Workspace](https://docs.microsoft.com/en-us/power-bi/collaborate-share/service-create-the-new-workspaces).  Depending on your account you may be able to simply go to https://msit.powerbi.com and sign in.
 
 ## Introduction
 
@@ -88,11 +88,11 @@ Now return to the GRC window and find the Event Hub Sink block in the far right 
 
 <center><img src="images/event-hub-sink-block.png"/></center>
  
-Double click it to bring up the properties for the block. Select **connection_string** for the Auth Method and paste in the Connection String in the appropriate field. Enter the name of the Event Hub instance you created (not the namespace) in the Event Hub Name field. Now enable the Event Hub Sink block and run the flowgraph again. 
+Double click it to bring up the properties for the block. Select **connection_string** for the Auth Method and paste in the Connection String in the appropriate field. Enter the name of the Event Hub instance you created (not the namespace) in the Event Hub Name field. Now enable the Event Hub Sink block and run the flowgraph again, you can continue to the next step while it runs. 
  
  <center><img src="images/event-hub-sink-properties.png"/></center>
  
- If you go to the Azure Portal and navigate to your Event Hub instance, you should start to see the graphs show that messages are being received from the flowgraph, note that it may take a minute to update. If you dont see messages arrive then re-run the flowgraph and refresh the page.
+ If you go to the Azure Portal and navigate to your Event Hub instance, you should start to see the graphs show that messages are being received from the flowgraph, note that it may take a minute to update. If you don't see messages arrive then re-run the flowgraph and refresh the page.  Once messages activity is seen, you can stop the flowgraph by closing the window that opened when it started.
 
  <center><img src="images/event-hub-graphs.png"/></center>
 
@@ -168,7 +168,7 @@ Now it is time to create an output destination for the job:
 
 Finally, the transformation query allows you to select which data goes to which output. For this example, we will be sending all of the data to the output:
 
-1. Select **Query** from the Resource Menu and update the query as follows. (*If you used different names for the Input and Output, use those instead*):
+1. Select **Query** from the Job topology Resource Menu and update the query as follows. (*If you used different names for the Input and Output, use those instead*):
 ```SQL
 SELECT *
 INTO [PowerBI-Output]
@@ -180,12 +180,11 @@ FROM [Event-Hub-Input]
 
 Everything should now be configured for your Stream Analytics job. The next step is to start the job. Go back to the Overview screen for the Job and Click the **Start** button in the upper left hand corner. This will bring up a blade providing you information about the job. Click the **Start** button on this blade. You should receive a notification that the process has started.
 
-
 ## Power BI
 
-The final step is to create a Dashboard in Power BI to help visualize the data. Before getting started, run the flowgraph one more time, this will ensure that ADS-B data flows through the Event Hub and triggers Stream Analytics to create the Dataset in Power BI. On the first run it may take a minute or two to fully propagate through the chain.
+The final step is to create a Dashboard in Power BI to help visualize the data. Before getting started, run the flowgraph one more time, this will ensure that ADS-B data flows through the Event Hub and triggers Stream Analytics to create the Dataset in Power BI.  The flowgraph will run forever, but after roughly 3 minutes the activity will end and you can stop the flowgraph by closing the window (feel free to work on the next steps while it runs). 
 
-Now go to [Power BI](https://powerbi.com) and **Sign In**.  The following steps will show you how to create the map-based interface.
+Go to [Power BI](https://powerbi.com) and **Sign In**.  The following steps will show you how to create the map-based interface.
 
 1. Select the Workspace you designated in your Stream Analytics job; you should see your Dataset listed in the Workspace:
  <center><img src="images/powerbi-dataset.png"/></center>
