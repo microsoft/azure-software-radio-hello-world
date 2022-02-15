@@ -92,7 +92,7 @@ Double click it to bring up the properties for the block. Select **connection_st
  
  <center><img src="images/event-hub-sink-properties.png"/></center>
  
- If you go to the Azure Portal and navigate to your Event Hub instance, you should start to see the graphs show that messages are being received from the flowgraph, note that it may take a minute to update. If you don't see messages arrive then re-run the flowgraph and refresh the page.  Once messages activity is seen, you can stop the flowgraph by closing the window that opened when it started.
+ If you go to the Azure Portal and navigate to your Event Hub instance, you should start to see the graphs show that messages are being received from the flowgraph, note that it may take a minute to update. If you don't see messages arrive then re-run the flowgraph and refresh the page.  Once message activity is seen, you can stop the flowgraph by closing the window that opened when it started.
 
  <center><img src="images/event-hub-graphs.png"/></center>
 
