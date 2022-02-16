@@ -13,8 +13,6 @@ By using our preconfigured development VM, not only are you skipping several ins
 
 ## Using Azure Software Radio Development VM
 
-**Note:** in Step 3 when you create the Virtual Machine, under Size, note how it suggests using Standard_NV12s_v3.  This is because the NV series VMs have a GPU and are specifically designed for desktop accelerated applications and virtual desktops.  If you are using a trial Azure subscription and don't have access to NV series VMs, that's OK, we do not require a GPU for any of the steps in this tutorial. The [Dv2 series](https://docs.microsoft.com/en-us/azure/virtual-machines/dv2-dsv2-series) is a good substitute for this tutorial.
-
 ### Signing up for the Private Preview of the Azure software radio developer VM
 
 Currently the Azure software radio developer VM is in Private Preview and our team must first authorize you to be able to deploy the service.  To sign up for the Developer VM click [Here](https://forms.office.com/r/sbZqBUVUE0), fill in the required details and our team will ensure you get authorized within 24 hours for the service.  The next step will verify you have access.
@@ -31,15 +29,13 @@ We will now check if you have access to the developer VM.  If at any point below
 
 4. If access has been approved the Marketplace will include "Azure software radio developer VM", click it and click Create.  Note, if you see two versions of the Azure software radio developer VM, do not select the offer marked preview, select the normal one.  If you don't see any listed and it has been more than 48 hours since you filled out the form, contact the Azure software radio developer VM team via email at azuresoftwareradio@microsoft.com.
 
-
-
 5. On the Create VM Page:
    - Select the subscription which has been authorized for developer VM
    - Select a new or existing resource group
    - Enter a Name for the virtual machine
    - Select your preferred region; we recommend using the region with the lowest latency, which you can easily determine using [this web app](https://azurespeedtest.azurewebsites.net/)
    - Change Availability options to "No infrastructure redundancy required" (this is needed to be able to use the NV series VMs)
-   - Under Size click "see all sizes", choose an NV series if one is available in your region (if not, try using the next lowest latency region)
+   - Under Size click "see all sizes", choose an NV series if one is available in your region (if not, try using the next lowest latency region).  NV series VMs have a GPU and are specifically designed for desktop accelerated applications and virtual desktops.  If you are using a trial Azure subscription and don't have access to NV series VMs, that's OK, we do not require a GPU for any of the steps in this tutorial. The [Dv2 series](https://docs.microsoft.com/en-us/azure/virtual-machines/dv2-dsv2-series) is a good substitute for this tutorial if NV is not available.
    - For Authentication type, choose Password, as it will be needed to RDP into the VM
    - The first page should look similar to the screenshot below
    
