@@ -47,24 +47,52 @@ In the top portion of the GUI the signal's power spectral density (frequency dom
 
 The bottom portion shows the constellation plot, which is how we can visualize the fast its using BPSK modulation.  The 1's and 0's are encoded into 1's and -1's, so when the blob finally splits in half corresponds to when the data can be reliably demodulated and decoded. 
 
+Note that we don't see any Doppler shift in this signal because as part of receiving this signal, the ground station had to follow the satellite as it passed overhead, which means it needed its orbit information.  That means it was convinient to reverse the Doppler as part of the receiving process, as the relative velocity between the satellite and receiver was known.  Reversing Doppler is as simple as a frequency shift, based on the relative velocity at that moment.
+
 <center><img src="images/constellation.png" width="500"/></center>
 
 If you look at your GRC window, in the bottom-left you should see the data being decoded, once the signal becomes strong enough. 
 
-Go ahead and stop the flowgraph.  Now click the Throttle block and hit the B key which will cause it to be bypassed.  Disable the two QT GUI blocks by clicking them and hitting D.  Now run the flowgraph again, it will decode the signal much faster because there are no GUIs to render and the throttle is disabled.  When the messages in the console stop changing you know you have finished processing the entire file and you can close the window.  The decoded bytes should now be stored in Blob storage due to the Blob Sink block STILL NEED TO FIGURE OUT WHICH STORAGE ACCOUNT THE USER WILL USE
-
-Note to self - sink has to be on the output of the deframer, and the SatDump cmd is
-
-MENTION HOW DOPPLER WAS ALREADY REVERSED AS PART OF TAKING THE RECORDING
-
+Go ahead and stop the flowgraph.  Now click the Throttle block and hit the B key which will cause it to be bypassed.  Disable the two QT GUI blocks by clicking them and hitting D.  Add a File Sink block at the output of the Deframer, to save the short-ints (yellow port) to a file called hrpt_out.raw16 on your VM.  Now run the flowgraph again, it will decode the signal much faster because there are no GUIs to render and the throttle is disabled.  When the messages in the console stop changing you know you have finished processing the entire file and you can close the window.  
 
 ## Using SatDump
 
-While GNU Radio performed the heavy lifting, in the form of signal processing, we need an additional utility to graphically render the imagery data we have decoded, as GNU Radio does not have a map-based GUI.  We can use [SatDump](https://github.com/altillimity/SatDump) to generate the imagery using data decoded from the same signal you just decoded in GNU Radio.  
+While GNU Radio performed the heavy lifting, in the form of signal processing, we need an additional utility to graphically render the imagery data we have decoded, as GNU Radio does not have a map-based GUI.  We can use [SatDump](https://github.com/altillimity/SatDump) to generate the imagery using data decoded from the same signal you just decoded in GNU Radio.  Note that the rest of this section is optional, the output is provided at the end of this tutorial.
 
-I THINK THE PLAN IS TO MAKE A DOCKER CONTAINER THAT WAITS FOR A BLOB TO EXIST AND THEN IT PULLS IT DOWN AND RUNS IT THROUGH SATDUMP AND THEN UPLOADS THE IMAGES TO STORAGE?
+Within your VM we will install SatDump using the following commands:
+```
+sudo apt-get install -y git build-essential cmake g++ pkgconf libfftw3-dev libjpeg-dev libpng-dev libnng-dev libvolk2-dev
+cd ~
+git clone git://github.com/altillimity/SatDump.git
+cd SatDump
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release -DNOGUI=ON -DENABLE_SDR_AIRSPY=OFF -DCMAKE_INSTALL_PREFIX=/usr ..
+make -j8
+```
 
-Within dev VM:
+This installs the dependencies for SatDump, then builds SatDump.
+
+While still in the build directory, run the following command, which will feed the file saved from GNU Radio into SatDump:
+```
+./satdump noaa_hrpt frames /tmp/hrpt_out.raw16 all_products ~/satdump_out/
+```
+
+Now open a file explorer and go to the satdump_out directory in your home directory, and you should see many files.  lFor those who skipped this section, the two images shown below represent the key output from SatDump.
+
+## Viewing the Output
+
+The first graphic below shows a world map interface with the satellite's viewable region shown (the imagery data is being overlayed on the map).  The green lines were not part of the decoded data, they were simply rendered by SatDump.  You can see that the satellite was over the Spain/France area when this signal was downlinked from the satellite.
+
+<center><img src="images/projection.png" width="700"/></center>
+
+The AVHRR portion of the data (the high resolution imagery) is shown below.  You may have seen similar examples of NOAA weather imagery that had color; those colors were added by a tool as part of post-processing, here we show the raw imagery (although it has been rotated so North is up).  Notice how the upper edge is noisy, this represents the few seconds as the satellite's signal was just barely receivable, there were many bit errors due to the 2 clusters of BPSK intersecting.  Because there is no forward error correction, we don't know that these bit errors occurred, although looking at the imagery it is obvious to us.
+
+![map](images/map.png)
+
+
+## TODO: Run SatDump in a Docker container, triggered via Azure Function
+
+Scratch pad:
 
 ```console
 curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
@@ -96,8 +124,6 @@ RUN apt-get update && apt-get install -y git build-essential cmake g++ pkgconf l
 RUN git clone --depth 1 git://github.com/altillimity/SatDump.git && cd SatDump && mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DNOGUI=ON -DENABLE_SDR_AIRSPY=OFF -DCMAKE_INSTALL_PREFIX=/usr .. && make -j8
 ```
 
-This installs the dependencies for SatDump, then builds SatDump.
-
 Now create a storage account, or go to an existing storage account, and make note of your connection string.  Then make a new function app called satdumpcontainer, choose container and Powershell.
 
 Test the docker container with
@@ -107,22 +133,3 @@ docker build -t satdumpimage .
 docker run -it --name satdumpcontainer satdumpimage
 sudo docker exec -it satdumpcontainer /bin/bash
 ```
-
-
-
-./satdump noaa_hrpt frames /tmp/hrpt_out.raw16 all_products /tmp/satdump_out/
-
-
-## Viewing the Output
-
-The first graphic below shows a world map interface with the satellite's viewable region shown (the imagery data is being overlayed on the map).  The green lines were not part of the decoded data, they were simply rendered by SatDump.  You can see that the satellite was over the Spain/France area when this signal was downlinked from the satellite.
-
-<center><img src="images/projection.png" width="700"/></center>
-
-The AVHRR portion of the data (the high resolution imagery) is shown below.  You may have seen similar examples of NOAA weather imagery that had color; those colors were added by a tool as part of post-processing, here we show the raw imagery (although it has been rotated so North is up).  Notice how the upper edge is noisy, this represents the few seconds as the satellite's signal was just barely receivable, there were many bit errors due to the 2 clusters of BPSK intersecting.  Because there is no forward error correction, we don't know that these bit errors occurred, although looking at the imagery it is obvious to us.
-
-![map](images/map.png)
-
-## Congratulations!
-
-FIND A WAY TO TIE THIS INTO AZURE SERVICES
