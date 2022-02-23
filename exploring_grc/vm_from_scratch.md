@@ -85,4 +85,4 @@ sudo make install
 sudo ldconfig
 ```
 
-At this point you have GNU Radio and the Azure SDR blocks installed, **you can skip to the section [Running GNU Radio](hello_world_stage1.md#running-gnu-radio).**
+At this point you have GNU Radio and the Azure SDR blocks installed, **you can skip to the section [Running GNU Radio](README.md#running-gnu-radio).**

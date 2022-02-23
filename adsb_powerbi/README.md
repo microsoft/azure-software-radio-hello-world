@@ -1,6 +1,6 @@
-# Stage 2
+# Mapping Airplane Locations Using ADS-B and Power BI
 
-Stage 2 is split into two parts.  First, we will show how ADS-B signals can be decoded and sent to Azure event hub.  Next, we incorporate Power BI to plot the locations of aircraft over time on a map-based interface. 
+This tutorial is split into two parts.  First, we will show how ADS-B signals can be decoded and sent to Azure event hub.  Next, we incorporate Power BI to plot the locations of aircraft over time on a map-based interface. 
 
 ## Prerequisites
 
@@ -40,7 +40,7 @@ This process is the same for most GNU Radio OOTs, you simply replace the github 
 
 ## ADS-B and Event Hub
 
-Open GRC, but this time, launch it by opening Ubuntu's Terminal application and typing in: `gnuradio-companion`. The **gr-adsb** module will print out additional information in this Terminal window while it is running. Now, open the flowgraph [adsb_event_hub.grc](flowgraphs/adsb_event_hub.grc) which is in the stage2/flowgraphs directory within this repo.  You should see the following flowgraph (ignore the grayed out Event Hub Sink block):
+Open GRC, but this time, launch it by opening Ubuntu's Terminal application and typing in: `gnuradio-companion`. The **gr-adsb** module will print out additional information in this Terminal window while it is running. Now, open the flowgraph [adsb_event_hub.grc](flowgraphs/adsb_event_hub.grc) which is in the adsb_powerbi/flowgraphs directory within this repo.  You should see the following flowgraph (ignore the grayed out Event Hub Sink block):
 
 <center><img src="images/ads-b-flowgraph.png" width="900"/></center>
 
