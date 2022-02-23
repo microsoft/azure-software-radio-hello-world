@@ -1,6 +1,6 @@
-# Azure SDR Hello World
+# Azure SDR Tutorials
 
-In this tutorial we demonstrate the power behind GNU Radio workflows in Azure.  This tutorial was written such that no prior experience with Azure and/or GNU Radio is required to follow along.
+In these tutorials we demonstrate the power behind GNU Radio workflows in Azure.  This tutorial was written such that no prior experience with Azure and/or GNU Radio is required to follow along.
 
 In **[Exploring GNU Radio Companion](exploring_grc/README.md)** we show how to install GNU Radio and the Azure blocks manually, starting with a fresh Ubuntu 20 VM in Azure.  We then switch over to using our prebuild GNU Radio development VM that lets you skip having to install and configure everything yourself.  As an example GNU Radio application we view the spectrum of the FM radio band, using an RF recording stored in Azure blob storage.
 
