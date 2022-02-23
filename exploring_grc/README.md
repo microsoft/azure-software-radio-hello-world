@@ -1,10 +1,10 @@
-# Stage 1
+# Exploring GNU Radio Companion
 
 GNU Radio is a free & open-source software development toolkit that provides signal processing blocks to implement software-defined radios (SDRs). It can be used with readily-available RF hardware, or without hardware in a simulation-like environment. It is widely used in research, industry, academia, government, and hobbyist environments to support both wireless communications research and real-world radio systems.  Using a framework like GNU Radio to create applications makes it easy to share your application with others.
 
 <center><img src="https://raw.githubusercontent.com/gnuradio/gr-logo/master/gnuradio_logo_web.svg" width="300"/></center>
 
-Throughout the stages of this tutorial we will show examples of performing SDR in the cloud, using Azure. To get started, we offer two different methods of setting up the Ubuntu based GNU Radio environment:
+Throughout the chapters of this tutorial we will show examples of performing SDR in the cloud, using Azure. To get started, we offer two different methods of setting up the Ubuntu based GNU Radio environment:
 
 1. Using our Azure software radio development VM in Azure Marketplace (recommended, simply continue below for this option)
 2. Starting from a fresh Ubuntu 20 VM [using these steps](vm_from_scratch.md)
@@ -135,7 +135,7 @@ In the same terminal, open GR with:
 gnuradio-companion
 ```
 
-Within GRC, open the flowgraph [visualize_fm.grc](./flowgraphs/visualize_fm.grc) in the stage1/flowgraphs directory of this repo. 
+Within GRC, open the flowgraph [visualize_fm.grc](./flowgraphs/visualize_fm.grc) in the exploring_grc/flowgraphs directory of this repo. 
 
 This example flowgraph consists of four blocks.  The samples are originating from the **Blob Source**, which is feeding a signal recording stored in blob storage.  The **Blob Source** has been preconfigured to connect to an Azure storage account we created to host several RF recordings, with an access level set to public read access.
 
@@ -173,4 +173,4 @@ When you run the flowgraph you will notice two adjustable bars: one for the volu
 
 ## Congratulations!
 
-You have successfully replayed RF data that was stored in the Cloud and then used GNU Radio to process it and visualize the recording in both time and frequency. Pretty powerful stuff! For the next stage see **[Stage 2](../stage2/hello_world_stage2.md)** 
+You have successfully replayed RF data that was stored in the Cloud and then used GNU Radio to process it and visualize the recording in both time and frequency. Pretty powerful stuff! For the next tutorial see **[Mapping Airplane Locations Using ADS-B and Power BI](../adsb_powerbi/README.md)** 
