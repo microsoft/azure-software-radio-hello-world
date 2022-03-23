@@ -53,31 +53,31 @@ Note that we don't see any Doppler shift in this signal because as part of recei
 
 If you look at your GRC window, in the bottom-left you should see the data being decoded, once the signal becomes strong enough. 
 
-Go ahead and stop the flowgraph.  Now click the Throttle block and hit the B key which will cause it to be bypassed.  Disable the two QT GUI blocks by clicking them and hitting D.  Add a File Sink block at the output of the Deframer, to save the short-ints (yellow port) to a file called hrpt_out.raw16 on your VM.  Now run the flowgraph again, it will decode the signal much faster because there are no GUIs to render and the throttle is disabled.  When the messages in the console stop changing you know you have finished processing the entire file and you can close the window.  
+Go ahead and stop the flowgraph.  Now click the Throttle block and hit the B key which will cause it to be bypassed.  Disable the two QT GUI blocks by clicking them and hitting D.  Add a File Sink block at the output of the Deframer, to save the short-ints (yellow port) to a file on your VM, for the filename (block parameter) use `/tmp/hrpt_out.raw16`.  Now run the flowgraph again, it will decode the signal much faster because there are no GUIs to render and the throttle is disabled.  When the messages in the console stop changing you know you have finished processing the entire file and you can close the window.  You should now have a file /tmp/hrpt_out.raw16 that contains the processed output of the entire input file.
 
 ## Using SatDump
 
-While GNU Radio performed the heavy lifting, in the form of signal processing, we need an additional utility to graphically render the imagery data we have decoded, as GNU Radio does not have a map-based GUI.  We can use [SatDump](https://github.com/altillimity/SatDump) to generate the imagery using data decoded from the same signal you just decoded in GNU Radio.  Note that the rest of this section is optional, the output is provided at the end of this tutorial.
+While GNU Radio performed the heavy lifting, in the form of signal processing, we need an additional utility to graphically render the imagery data we have decoded, as GNU Radio does not have a map-based GUI.  We can use [SatDump](https://github.com/altillimity/SatDump) to generate the imagery using data decoded from the same signal you just decoded in GNU Radio. 
 
-Within your VM we will install SatDump using the following commands:
+Within your VM we will build and install SatDump using the following commands:
 ```
-sudo apt-get install -y git build-essential cmake g++ pkgconf libfftw3-dev libjpeg-dev libpng-dev libnng-dev libvolk2-dev
+sudo apt-get install -y git build-essential cmake g++ pkgconf libfftw3-dev libjpeg-dev libpng-dev libnng-dev
 cd ~
 git clone git://github.com/altillimity/SatDump.git
 cd SatDump
-mkdir build && cd build
+mkdir build
+cd build
 cmake -DCMAKE_BUILD_TYPE=Release -DNOGUI=ON -DENABLE_SDR_AIRSPY=OFF -DCMAKE_INSTALL_PREFIX=/usr ..
 make -j8
+sudo make install
 ```
 
-This installs the dependencies for SatDump, then builds SatDump.
-
-While still in the build directory, run the following command, which will feed the file saved from GNU Radio into SatDump:
+Now run the following command, which will feed the file saved from GNU Radio into SatDump:
 ```
 ./satdump noaa_hrpt frames /tmp/hrpt_out.raw16 all_products ~/satdump_out/
 ```
 
-Now open a file explorer and go to the satdump_out directory in your home directory, and you should see many files.  lFor those who skipped this section, the two images shown below represent the key output from SatDump.
+Now open a file explorer and go to the satdump_out directory in your home directory, and you should see many files.
 
 ## Viewing the Output
 
@@ -90,46 +90,24 @@ The AVHRR portion of the data (the high resolution imagery) is shown below.  You
 ![map](images/map.png)
 
 
-## TODO: Run SatDump in a Docker container, triggered via Azure Function
+## Congratulations!
 
-Scratch pad:
+You have successfully decoded and rendered imagery off a raw IQ recording from NOAA 19!
 
-```console
-curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
-sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
-sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-$(lsb_release -cs)-prod $(lsb_release -cs) main" > /etc/apt/sources.list.d/dotnetdev.list'
-sudo apt-get update
-sudo apt-get install azure-functions-core-tools-4
+## TODO: Process imagery through AI, e.g. to detect features
 
-cd ~
-mkdir docker
-cd docker
+This part will be added to the end, so it's not required to finish the tutorial above.
 
-func init --worker-runtime powershell --docker
-func new --name RunSatDump --template "Azure Blob Storage trigger"
+## TODO: Run SatDump in a Docker container instead of manually, triggered via Azure Function
+
+This part will replace the manual running of SatDump, so it's not required to finish the existing tutorial, but it will show off more of Azure once completed.
+
+Note, these two lines need to be added to the Dockerfile to install SatDump on the container
+
+```
+RUN apt-get update && apt-get install -y git build-essential cmake g++ pkgconf libfftw3-dev libjpeg-dev libpng-dev libnng-dev libvolk2-dev nano
+
+RUN git clone --depth 1 git://github.com/altillimity/SatDump.git && cd SatDump && mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DNOGUI=ON -DENABLE_SDR_AIRSPY=OFF -DCMAKE_INSTALL_PREFIX=/usr .. && make -j8 && make install
 ```
 
-If it prompts you about powershell just choose "1".  
-
-Now edit the Dockerfile it produced, erase what is there and add:
-```docker
-FROM mcr.microsoft.com/azure-functions/powershell:4
-ENV AzureWebJobsScriptRoot=/home/site/wwwroot \
-    AzureFunctionsJobHost__Logging__Console__IsEnabled=true
-
-COPY . /home/site/wwwroot
-
-RUN apt-get update && apt-get install -y git build-essential cmake g++ pkgconf libfftw3-dev libjpeg-dev libpng-dev libnng-dev libvolk2-dev
-
-RUN git clone --depth 1 git://github.com/altillimity/SatDump.git && cd SatDump && mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DNOGUI=ON -DENABLE_SDR_AIRSPY=OFF -DCMAKE_INSTALL_PREFIX=/usr .. && make -j8
-```
-
-Now create a storage account, or go to an existing storage account, and make note of your connection string.  Then make a new function app called satdumpcontainer, choose container and Powershell.
-
-Test the docker container with
-
-```console
-docker build -t satdumpimage .
-docker run -it --name satdumpcontainer satdumpimage
-sudo docker exec -it satdumpcontainer /bin/bash
-```
+Satdump is run using the same method as in this tutorial above, except the target file needs to come from blob storage, not /tmp/
